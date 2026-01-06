@@ -2,7 +2,7 @@
   "name": "College Document Archive System",
   "image": "mcr.microsoft.com/devcontainers/python:3.13-bookworm",
   "postCreateCommand": "pip install --quiet -r requirements.txt && python scripts/init-db.py",
-  "postStartCommand": "flask run --host=0.0.0.0 --port=5000 &",
+  "postStartCommand": "python run.py &",
   "customizations": {
     "vscode": {
       "extensions": [
