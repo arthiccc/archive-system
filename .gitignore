@@ -1,0 +1,45 @@
+# Byte-compiled / optimized files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.venv/
+.env
+.env.local
+*.egg-info/
+dist/
+build/
+*.egg
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Data (uploaded documents)
+data/docs/
+
+# Docker
+.docker/
+
+# Test coverage
+.coverage
+htmlcov/
+
+# Pytest
+.pytest_cache/
+
+# Sensitive files
+.env

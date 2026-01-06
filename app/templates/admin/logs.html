@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Audit Logs - Archive System{% endblock %}
+{% block content %}
+<h2><i class="bi bi-journal-text"></i> Audit Logs</h2>
+<div class="card mt-4">
+    <div class="card-header">
+        <form method="GET" class="row g-3">
+            <div class="col-md-3">
+                <select name="action" class="form-select">
+                    <option value="">All Actions</option>
+                    <option value="upload" {{ 'selected' if request.args.get('action') == 'upload' }}>Upload</option>
+                    <option value="view" {{ 'selected' if request.args.get('action') == 'view' }}>View</option>
+                    <option value="download" {{ 'selected' if request.args.get('action') == 'download' }}>Download</option>
+                    <option value="edit" {{ 'selected' if request.args.get('action') == 'edit' }}>Edit</option>
+                    <option value="delete" {{ 'selected' if request.args.get('action') == 'delete' }}>Delete</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="user" class="form-select">
+                    <option value="">All Users</option>
+                    {% for user in users %}
+                        <option value="{{ user.id }}" {{ 'selected' if request.args.get('user')|int == user.id }}>{{ user.username }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <input type="date" name="date_from" class="form-control" value="{{ request.args.get('date_from', '') }}">
+            </div>
+            <div class="col-md-2">
+                <input type="date" name="date_to" class="form-control" value="{{ request.args.get('date_to', '') }}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Filter</button>
+            </div>
+        </form>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>User</th>
+                        <th>Action</th>
+                        <th>Document</th>
+                        <th>IP Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>{{ log.user.username if log.user else 'Unknown' }}</td>
+                        <td>
+                            <span class="badge bg-{{ 'primary' if log.action == 'upload' else 'success' if log.action == 'download' else 'info' if log.action == 'view' else 'warning' if log.action == 'edit' else 'danger' }}">
+                                {{ log.action }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if log.document %}
+                                <a href="{{ url_for('documents.detail', doc_id=log.document.id) }}">{{ log.document.title }}</a>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td><small class="text-muted">{{ log.ip_address }}</small></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No logs found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% if pagination.pages > 1 %}
+    <div class="card-footer">
+        <nav>
+            <ul class="pagination justify-content-center mb-0">
+                {% for page in pagination.iter_pages() %}
+                    <li class="page-item {{ 'active' if page == pagination.page else '' }}">
+                        <a class="page-link" href="{{ url_for('admin.logs', page=page, **request.args) }}">{{ page }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

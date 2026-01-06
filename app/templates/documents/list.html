@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block title %}Documents - Archive System{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2><i class="bi bi-folder2-open"></i> Documents</h2>
+    <a href="{{ url_for('documents.upload') }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Upload Document
+    </a>
+</div>
+
+<!-- Filters -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" class="filter-bar">
+            <select name="category" class="form-select" onchange="this.form.submit()">
+                <option value="">All Categories</option>
+                {% for cat in categories %}
+                    <option value="{{ cat.id }}" {% if request.args.get('category')|int == cat.id %}selected{% endif %}>
+                        {{ cat.full_path() if cat.parent else cat.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            <select name="period" class="form-select" onchange="this.form.submit()">
+                <option value="">All Periods</option>
+                {% for period in periods %}
+                    <option value="{{ period.id }}" {% if request.args.get('period')|int == period.id %}selected{% endif %}>
+                        {{ period.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            <select name="tag" class="form-select" onchange="this.form.submit()">
+                <option value="">All Tags</option>
+                {% for tag in tags %}
+                    <option value="{{ tag.id }}" {% if request.args.get('tag')|int == tag.id %}selected{% endif %}>
+                        {{ tag.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            <input type="text" name="q" class="form-control" placeholder="Search..." value="{{ request.args.get('q', '') }}" style="max-width: 250px;">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search"></i> Search
+            </button>
+            {% if request.args.get('category') or request.args.get('period') or request.args.get('tag') or request.args.get('q') %}
+                <a href="{{ url_for('documents.list') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-lg"></i> Clear
+                </a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+<!-- Results Header -->
+{% if documents %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-muted">{{ documents|length }} documents found</span>
+        <div class="view-toggle">
+            <button id="viewGrid" class="active" title="Grid View"><i class="bi bi-grid-3x3-gap"></i></button>
+            <button id="viewList" title="List View"><i class="bi bi-list"></i></button>
+        </div>
+    </div>
+{% endif %}
+
+<!-- Documents Grid/List -->
+{% if documents %}
+    <div id="documentsContainer" class="document-grid">
+        {% for doc in documents %}
+        <div class="document-card" onclick="window.location.href='{{ url_for('documents.detail', doc_id=doc.id) }}'">
+            <div class="document-card-header">
+                <div class="document-card-icon">
+                    <i class="bi bi-file-earmark"></i>
+                </div>
+                <div>
+                    <div class="document-card-title">{{ doc.title }}</div>
+                    <div class="document-card-meta">{{ doc.original_filename }}</div>
+                </div>
+            </div>
+            <div class="document-card-meta">
+                <i class="bi bi-folder"></i> {{ doc.category.full_path() if doc.category else '-' }}
+            </div>
+            <div class="document-card-meta">
+                <i class="bi bi-calendar3"></i> {{ doc.academic_period.name if doc.academic_period else '-' }}
+            </div>
+            {% if doc.tags %}
+            <div class="document-card-tags">
+                {% for tag in doc.tags %}
+                    <span class="badge" style="background-color: {{ tag.color }};">{{ tag.name }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div class="document-card-actions">
+                <a href="{{ url_for('documents.detail', doc_id=doc.id) }}" class="btn btn-outline-primary btn-sm" onclick="event.stopPropagation();">
+                    <i class="bi bi-eye"></i> View
+                </a>
+                <a href="{{ url_for('documents.download', doc_id=doc.id) }}" class="btn btn-outline-success btn-sm" onclick="event.stopPropagation();">
+                    <i class="bi bi-download"></i> Download
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if pagination.pages > 1 %}
+    <nav class="pagination">
+        {% for page in pagination.iter_pages() %}
+            {% if page %}
+                {% if page == pagination.page %}
+                    <span class="active">{{ page }}</span>
+                {% else %}
+                    <a href="{{ url_for('documents.list', page=page, **request.args) }}">{{ page }}</a>
+                {% endif %}
+            {% else %}
+                <span>...</span>
+            {% endif %}
+        {% endfor %}
+    </nav>
+    {% endif %}
+{% else %}
+    <div class="empty-state">
+        <i class="bi bi-folder2-open"></i>
+        <h4>No Documents Found</h4>
+        <p>Upload your first document to get started.</p>
+        <a href="{{ url_for('documents.upload') }}" class="btn btn-primary">
+            <i class="bi bi-upload"></i> Upload Document
+        </a>
+    </div>
+{% endif %}
+
+<script>
+// Initialize view toggle
+document.addEventListener('DOMContentLoaded', function() {
+    const gridBtn = document.getElementById('viewGrid');
+    const listBtn = document.getElementById('viewList');
+    const container = document.getElementById('documentsContainer');
+    
+    if (!gridBtn || !listBtn || !container) return;
+    
+    // Get saved preference
+    const savedView = localStorage.getItem('documentView') || 'grid';
+    setView(savedView);
+    
+    gridBtn.addEventListener('click', function() { setView('grid'); });
+    listBtn.addEventListener('click', function() { setView('list'); });
+    
+    function setView(view) {
+        container.className = view === 'grid' ? 'document-grid' : 'table-responsive table';
+        container.style.display = view === 'list' ? 'block' : 'grid';
+        gridBtn.classList.toggle('active', view === 'grid');
+        listBtn.classList.toggle('active', view === 'list');
+        localStorage.setItem('documentView', view);
+    }
+});
+</script>
+{% endblock %}

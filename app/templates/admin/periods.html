@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Academic Periods - Archive System{% endblock %}
+{% block content %}
+<h2><i class="bi bi-calendar3"></i> Academic Periods</h2>
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Add Period</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Year Start</label>
+                        <input type="number" name="year_start" class="form-control" value="2024" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Year End</label>
+                        <input type="number" name="year_end" class="form-control" value="2025" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Semester</label>
+                        <select name="semester" class="form-select" required>
+                            <option value="Fall">Fall</option>
+                            <option value="Spring">Spring</option>
+                            <option value="Summer">Summer</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Create Period</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Period</th>
+                                <th>Status</th>
+                                <th>Documents</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for period in periods %}
+                            <tr>
+                                <td><strong>{{ period.name }}</strong></td>
+                                <td>
+                                    <span class="badge {{ 'bg-success' if period.is_active else 'bg-secondary' }}">
+                                        {{ 'Active' if period.is_active else 'Inactive' }}
+                                    </span>
+                                </td>
+                                <td>{{ period.documents|length }}</td>
+                                <td>
+                                    <a href="{{ url_for('admin.toggle_period', id=period.id) }}" class="btn btn-sm {{ 'btn-outline-warning' if period.is_active else 'btn-outline-success' }}">
+                                        <i class="bi {{ 'bi-pause' if period.is_active else 'bi-play' }}"></i>
+                                    </a>
+                                    <a href="{{ url_for('admin.delete_period', id=period.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete? Documents will not be deleted.');">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

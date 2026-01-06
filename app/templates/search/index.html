@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Search - Archive System{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2><i class="bi bi-search"></i> Search Documents</h2>
+</div>
+
+<!-- Search Form -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" action="{{ url_for('search.index') }}" class="filter-bar">
+            <input type="text" name="q" class="form-control" 
+                   placeholder="Search by title, filename, or content..." 
+                   value="{{ query }}" autofocus style="max-width: 400px;">
+            <select name="category" class="form-select">
+                <option value="">All Categories</option>
+                {% for cat in categories %}
+                    <option value="{{ cat.id }}" {% if request.args.get('category')|int == cat.id %}selected{% endif %}>
+                        {{ cat.full_path() if cat.parent else cat.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            <select name="period" class="form-select">
+                <option value="">All Periods</option>
+                {% for period in periods %}
+                    <option value="{{ period.id }}" {% if request.args.get('period')|int == period.id %}selected{% endif %}>
+                        {{ period.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            <select name="tag" class="form-select">
+                <option value="">All Tags</option>
+                {% for tag in tags %}
+                    <option value="{{ tag.id }}" {% if request.args.get('tag')|int == tag.id %}selected{% endif %}>
+                        {{ tag.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search"></i> Search
+            </button>
+            {% if query or request.args.get('category') or request.args.get('period') or request.args.get('tag') %}
+                <a href="{{ url_for('search.index') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-lg"></i> Clear
+                </a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+<!-- Results -->
+{% if search_performed %}
+    {% if results %}
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted">{{ total_count }} document(s) found</span>
+        </div>
+        
+        <div class="document-grid">
+            {% for doc in results %}
+            <div class="document-card" onclick="window.location.href='{{ url_for('documents.detail', doc_id=doc.id) }}'">
+                <div class="document-card-header">
+                    <div class="document-card-icon">
+                        <i class="bi bi-file-earmark"></i>
+                    </div>
+                    <div>
+                        <div class="document-card-title">{{ doc.title }}</div>
+                        <div class="document-card-meta">{{ doc.original_filename }}</div>
+                    </div>
+                </div>
+                <div class="document-card-meta">
+                    <i class="bi bi-folder"></i> {{ doc.category.full_path() if doc.category else '-' }}
+                </div>
+                <div class="document-card-meta">
+                    <i class="bi bi-calendar3"></i> {{ doc.uploaded_at.strftime('%Y-%m-%d') if doc.uploaded_at else '-' }}
+                </div>
+                {% if doc.tags %}
+                <div class="document-card-tags">
+                    {% for tag in doc.tags %}
+                        <span class="badge" style="background-color: {{ tag.color }};">{{ tag.name }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <div class="document-card-actions">
+                    <a href="{{ url_for('documents.detail', doc_id=doc.id) }}" class="btn btn-outline-primary btn-sm" onclick="event.stopPropagation();">
+                        <i class="bi bi-eye"></i> View
+                    </a>
+                    <a href="{{ url_for('documents.download', doc_id=doc.id) }}" class="btn btn-outline-success btn-sm" onclick="event.stopPropagation();">
+                        <i class="bi bi-download"></i> Download
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <i class="bi bi-search"></i>
+            <h4>No Results Found</h4>
+            <p>Try different keywords or adjust your filters.</p>
+        </div>
+    {% endif %}
+{% else %}
+    <div class="empty-state">
+        <i class="bi bi-search"></i>
+        <h4>Search Documents</h4>
+        <p>Enter keywords to search through titles, content, and descriptions.</p>
+    </div>
+{% endif %}
+{% endblock %}

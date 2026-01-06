@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Statistics - Archive System{% endblock %}
+{% block content %}
+<h2><i class="bi bi-bar-chart"></i> Statistics</h2>
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Documents by Month</h5>
+            </div>
+            <div class="card-body">
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Documents</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for month, count in docs_by_month %}
+                        <tr>
+                            <td>{{ month.strftime('%Y-%m') }}</td>
+                            <td>{{ count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Documents by Academic Period</h5>
+            </div>
+            <div class="card-body">
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Period</th>
+                            <th>Documents</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for period, count in docs_by_period %}
+                        <tr>
+                            <td>{{ period }}</td>
+                            <td>{{ count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Top Categories</h5>
+            </div>
+            <div class="card-body">
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Documents</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for category, count in top_categories %}
+                        <tr>
+                            <td>{{ category }}</td>
+                            <td>{{ count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

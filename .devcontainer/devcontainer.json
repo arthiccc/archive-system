@@ -1,0 +1,30 @@
+{
+  "name": "College Document Archive System",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-vscode.vscode-json",
+        "mtxr.sqltools"
+      ]
+    }
+  },
+  "postCreateCommand": "pip install --quiet -r requirements.txt && python scripts/init-db.py",
+  "remoteUser": "root",
+  "portsAttributes": {
+    "5000": {
+      "label": "Flask Application",
+      "onAutoForward": "notify",
+      "visibility": "public"
+    }
+  },
+  "hostRequirements": {
+    "cpus": 2,
+    "memory": "4gb",
+    "storage": "10gb"
+  }
+}
