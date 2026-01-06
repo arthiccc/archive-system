@@ -43,3 +43,7 @@ htmlcov/
 
 # Sensitive files
 .env
+*.db
+*.sqlite
+*.sqlite3
+archive.db
