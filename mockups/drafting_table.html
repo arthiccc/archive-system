@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Archive Engine | Drafting Table</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Geist Mono', monospace; background: #111; color: #666; overflow: hidden; }
+        .canvas { 
+            background-color: #080808; 
+            background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 20px 20px;
+            height: 100vh; position: relative;
+        }
+        .panel { position: absolute; background: #000; border: 1px solid #222; }
+        .blueprint-mark { position: absolute; width: 10px; height: 10px; border: 1px solid #444; }
+        .active-asset { background: white; color: black; padding: 60px; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
+    </style>
+</head>
+<body class="canvas">
+    <!-- Top Bar -->
+    <div class="panel top-0 left-0 w-full h-10 flex items-center px-4 justify-between border-x-0">
+        <span class="text-[10px] font-bold">ENGINE_V4_CORE // DRAFTING_MODE</span>
+        <span class="text-[10px]">COORDS: X:142 Y:092</span>
+    </div>
+
+    <!-- Left Palette -->
+    <div class="panel left-4 top-14 w-12 py-4 flex flex-col items-center gap-8 rounded-sm">
+        <div class="w-6 h-6 border border-zinc-700 rounded-sm"></div>
+        <div class="w-6 h-6 border border-zinc-700 rounded-sm"></div>
+        <div class="w-6 h-6 border border-zinc-700 rounded-sm"></div>
+    </div>
+
+    <!-- Main Workspace -->
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div class="active-asset w-[700px] h-[900px] pointer-events-auto">
+            <div class="mb-12 flex justify-between border-b border-zinc-100 pb-4">
+                <span class="text-[10px]">REF: 84729-STRAT</span>
+                <span class="text-[10px] text-zinc-300 italic">PRECISION_HIGH</span>
+            </div>
+            <h1 class="text-3xl font-bold uppercase tracking-widest mb-12">Systemic Growth Matrix</h1>
+            <div class="text-sm leading-relaxed text-zinc-600 space-y-6">
+                <p>The drafting table interface treats every document as a technical schematic. We use high-precision coordinate mapping to ensure every entity is indexed with its spatial context.</p>
+                <div class="h-[1px] bg-zinc-100 w-full my-12"></div>
+                <p>By treating knowledge as an engineering problem, the Archive Engine allows for long-form research without the fatigue of traditional "flat" document readers.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Data Panel -->
+    <div class="panel right-4 top-14 bottom-4 w-80 p-6 flex flex-col gap-12">
+        <div>
+            <span class="text-[10px] uppercase font-bold text-zinc-500 mb-4 block underline">Telemetry_Readout</span>
+            <div class="text-[9px] space-y-2">
+                <div class="flex justify-between"><span>CPU_TEMP</span><span>42.1°C</span></div>
+                <div class="flex justify-between"><span>VRAM_AVAIL</span><span>19.8GB</span></div>
+                <div class="flex justify-between"><span>DISK_IO</span><span>1.4MB/S</span></div>
+            </div>
+        </div>
+        <div class="flex-1 overflow-auto border-t border-zinc-900 pt-4">
+            <span class="text-[10px] uppercase font-bold text-zinc-500 mb-4 block underline">Process_Stack</span>
+            <div class="text-[9px] space-y-4">
+                <div class="text-zinc-400">[01] BINARY_VAL_OK</div>
+                <div class="text-zinc-400">[02] OCR_COORD_MAPPING</div>
+                <div class="text-white bg-zinc-900 px-1 font-bold">[03] AGENT_RECURSIVE_SUMM</div>
+                <div class="text-zinc-800">[04] MEILI_VEC_INDEX</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blueprint Corner Marks -->
+    <div class="blueprint-mark top-4 left-4 border-r-0 border-b-0"></div>
+    <div class="blueprint-mark top-4 right-4 border-l-0 border-b-0"></div>
+    <div class="blueprint-mark bottom-4 left-4 border-r-0 border-t-0"></div>
+    <div class="blueprint-mark bottom-4 right-4 border-l-0 border-t-0"></div>
+</body>
+</html>

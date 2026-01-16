@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 from app import create_app
 from app.extensions import db
-from app.models import Document, Category, AcademicPeriod, Tag
+from app.models import Document, Category, AcademicPeriod, Tag, AdminUser
 
 
 def random_date():
@@ -20,6 +20,11 @@ def generate_fake_documents(count=100):
         categories = Category.query.all()
         periods = AcademicPeriod.query.all()
         tags = Tag.query.all()
+        admin = AdminUser.query.first()
+
+        if not admin:
+            print("Please run init-db.py first to create an admin user.")
+            return
 
         if not categories or not periods:
             print("Please run init-db.py first to create categories and periods.")
@@ -106,7 +111,7 @@ def generate_fake_documents(count=100):
                 description=random.choice(sample_descriptions),
                 category_id=category.id,
                 academic_period_id=period.id,
-                uploaded_by=1,
+                uploaded_by=admin.id,
                 uploaded_at=random_date(),
             )
 

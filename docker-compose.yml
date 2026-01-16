@@ -4,19 +4,18 @@ services:
     env_file:
       - .env
     ports:
-      - "5000:5000"
+      - "8080:5000"
     environment:
       - FLASK_APP=run
       - FLASK_ENV=${FLASK_ENV:-development}
-      - SECRET_KEY=${SECRET_KEY}
-      - DATABASE_URL=${DATABASE_URL}
-      - UPLOAD_FOLDER=${UPLOAD_FOLDER}
-      - MAX_CONTENT_LENGTH=${MAX_CONTENT_LENGTH}
     volumes:
+      - .:/app
       - ./data:/data
     depends_on:
       db:
         condition: service_healthy
+      meilisearch:
+        condition: service_started
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
@@ -29,7 +28,7 @@ services:
     environment:
       - POSTGRES_DB=archive_db
       - POSTGRES_USER=archive_admin
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_PASSWORD=archive_pass
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
@@ -47,6 +46,18 @@ services:
       - redis_data:/data
     restart: unless-stopped
 
+  meilisearch:
+    image: getmeili/meilisearch:v1.12
+    ports:
+      - "7700:7700"
+    environment:
+      - MEILI_MASTER_KEY=masterKey
+      - MEILI_NO_ANALYTICS=true
+    volumes:
+      - meilisearch_data:/meili_data
+    restart: unless-stopped
+
 volumes:
   postgres_data:
   redis_data:
+  meilisearch_data:

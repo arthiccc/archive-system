@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archive Engine | The Monolith</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --text: #ffffff;
+            --text-dim: #444444;
+            --accent: #3b82f6;
+        }
+        body {
+            font-family: 'Geist', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+        }
+        .mono { font-family: 'Geist Mono', monospace; }
+        
+        /* Surgical Layout */
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr 320px;
+            height: 100vh;
+        }
+
+        /* The Canvas */
+        .canvas-container {
+            background-color: #0a0a0a;
+            position: relative;
+        }
+
+        .active-sheet {
+            background: white;
+            color: black;
+            width: 800px;
+            height: 1131px; /* A4 Ratio */
+            margin: 40px auto;
+            padding: 80px;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.5);
+            transition: transform 0.4s ease;
+        }
+
+        /* Telemetry Stream */
+        .telemetry-stream::-webkit-scrollbar { width: 0px; }
+        
+        .status-pill {
+            padding: 2px 8px;
+            border-radius: 2px;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* Functional Whitespace */
+        .gutter { padding: 40px; }
+        
+        /* Typography Scale */
+        .h-large { font-size: 42px; line-height: 1.1; letter-spacing: -0.04em; font-weight: 500; }
+        .h-small { font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-dim); font-weight: 600; }
+        .body-text { font-size: 15px; line-height: 1.6; color: #333; }
+
+    </style>
+</head>
+<body>
+
+    <div class="workspace-grid">
+        
+        <!-- 1. THE REGISTRY (Left) -->
+        <aside class="gutter flex flex-col justify-between border-r border-white/5">
+            <div class="flex flex-col gap-12">
+                <div class="flex items-center gap-3">
+                    <div class="w-2 h-2 rounded-full bg-blue-600"></div>
+                    <span class="mono text-[11px] tracking-tighter">ENGINE_CORE_v3.0.0</span>
+                </div>
+
+                <div class="flex flex-col gap-8">
+                    <div class="flex flex-col gap-2">
+                        <span class="h-small">Active Workspace</span>
+                        <div class="text-sm font-medium">Q4_FINANCE_STRATEGY.PDF</div>
+                    </div>
+                    
+                    <div class="flex flex-col gap-4">
+                        <span class="h-small">Registry</span>
+                        <div class="flex flex-col gap-3">
+                            <div class="flex justify-between items-center group cursor-pointer">
+                                <span class="mono text-[10px] text-white">REVENUE_ANALYSIS.WAV</span>
+                                <span class="mono text-[10px] text-zinc-800 group-hover:text-zinc-400">01</span>
+                            </div>
+                            <div class="flex justify-between items-center group cursor-pointer">
+                                <span class="mono text-[10px] text-zinc-600">AUDIT_LOG_EXH.PDF</span>
+                                <span class="mono text-[10px] text-zinc-800 group-hover:text-zinc-400">02</span>
+                            </div>
+                            <div class="flex justify-between items-center group cursor-pointer">
+                                <span class="mono text-[10px] text-zinc-600">MEETING_TRANSCRIPT.PDF</span>
+                                <span class="mono text-[10px] text-zinc-800 group-hover:text-zinc-400">03</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-4">
+                <div class="p-4 bg-zinc-900/30 rounded flex flex-col gap-3">
+                    <div class="flex justify-between items-center">
+                        <span class="h-small !text-zinc-500">GPU_LOAD</span>
+                        <span class="mono text-[10px] text-blue-500 italic">42.4%</span>
+                    </div>
+                    <div class="w-full h-[1px] bg-zinc-800">
+                        <div class="w-[42%] h-full bg-blue-500"></div>
+                    </div>
+                </div>
+                <div class="text-[10px] mono text-zinc-700 uppercase">Archive Engine // Tokyo Dev Center</div>
+            </div>
+        </aside>
+
+        <!-- 2. THE CANVAS (Center) -->
+        <main class="canvas-container overflow-auto scroll-smooth">
+            <div class="active-sheet">
+                <div class="flex justify-between items-start mb-20">
+                    <div class="h-small !text-zinc-400 italic">Financial Core / Q4 Strategy / Document #84729</div>
+                    <div class="mono text-[10px] text-zinc-300">CONFIDENTIAL_LEVEL_04</div>
+                </div>
+
+                <div class="flex flex-col gap-12">
+                    <h1 class="h-large text-black">Precision Architecture for High-Performance Archiving</h1>
+                    
+                    <div class="body-text space-y-6">
+                        <p>In the transition toward <span class="font-bold underline">steroid-level systems</span>, we prioritize architectural rigor. The archive is not a box; it is a live engine.</p>
+                        <p>We leverage local multi-modal AI to analyze every byte of data as it materializes. This allows for near-zero latency in retrieval and a recursive understanding of the knowledge base.</p>
+                        
+                        <div class="py-10 border-y border-zinc-100 flex justify-between items-center my-10">
+                            <div class="flex flex-col">
+                                <span class="h-small !text-zinc-400">Entity Analysis</span>
+                                <span class="text-sm font-bold text-black uppercase">Growth_Projections</span>
+                            </div>
+                            <div class="flex flex-col text-right">
+                                <span class="h-small !text-zinc-400">Confidence</span>
+                                <span class="text-sm font-bold text-blue-600 mono">0.984</span>
+                            </div>
+                        </div>
+
+                        <p>The Monolith UI is designed for users who stay. It eliminates the distraction of "product" UI and replaces it with the utility of an "engine" interface. Focus is the ultimate commodity.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Floating Audio Pill (Minimalist) -->
+            <div class="fixed bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-6 px-6 py-3 bg-white text-black rounded-full shadow-2xl z-50">
+                <i class="bi bi-play-fill text-lg"></i>
+                <div class="w-48 h-1 bg-zinc-100 rounded-full relative">
+                    <div class="absolute left-0 top-0 h-full w-1/3 bg-black"></div>
+                </div>
+                <span class="mono text-[10px] font-bold">04:20 // 12:00</span>
+            </div>
+        </main>
+
+        <!-- 3. THE TELEMETRY (Right) -->
+        <aside class="gutter border-l border-white/5 flex flex-col gap-12 bg-black">
+            <div class="flex flex-col gap-4">
+                <span class="h-small">Agentic Execution</span>
+                <div class="p-6 bg-zinc-900/20 rounded flex flex-col gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></div>
+                        <span class="mono text-[10px] text-blue-500">LLM_PLANNER_ACTIVE</span>
+                    </div>
+                    <p class="text-[11px] leading-relaxed text-zinc-400 italic">
+                        "I am cross-referencing this strategy with internal audit logs to identify risk vectors."
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-4 flex-1">
+                <span class="h-small">Process Trace</span>
+                <div class="telemetry-stream flex flex-col gap-6 overflow-auto">
+                    <div class="flex flex-col gap-1">
+                        <div class="flex justify-between items-center text-[10px] mono text-zinc-600">
+                            <span>00:01.24</span>
+                            <span>SUCCESS</span>
+                        </div>
+                        <span class="text-[11px] text-zinc-300">INGEST: PDF_84729</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <div class="flex justify-between items-center text-[10px] mono text-zinc-600">
+                            <span>00:01.89</span>
+                            <span class="text-blue-500">WORKING</span>
+                        </div>
+                        <span class="text-[11px] text-zinc-300">VISION: OCR_LAYER_SCAN</span>
+                    </div>
+                    <div class="flex flex-col gap-1 opacity-20">
+                        <div class="flex justify-between items-center text-[10px] mono text-zinc-600">
+                            <span>WAITING</span>
+                            <span>--</span>
+                        </div>
+                        <span class="text-[11px] text-zinc-300">BRAIN: SEMANTIC_LINK</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 border border-white/5 rounded">
+                <span class="h-small mb-3 block">Insight Box</span>
+                <p class="text-[11px] leading-relaxed text-zinc-500">
+                    Detected correlation with <span class="text-zinc-200 underline">MEETING_TRANSCRIPT.PDF</span> regarding R&D expenditure. High priority link established.
+                </p>
+            </div>
+        </aside>
+
+    </div>
+
+</body>
+</html>

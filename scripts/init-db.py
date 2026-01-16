@@ -1,10 +1,19 @@
 from app.extensions import db
-from app.models import AcademicPeriod, Category, Tag
+from app.models import AcademicPeriod, Category, Tag, AdminUser
 
 
 def init_db(app):
     with app.app_context():
         db.create_all()
+
+        if AdminUser.query.count() == 0:
+            admin = AdminUser(
+                username="admin", full_name="System Admin", email="admin@example.com"
+            )
+            admin.set_password("admin123")
+            db.session.add(admin)
+            db.session.commit()
+            print("Created default admin user (admin/admin123)")
 
         if AcademicPeriod.query.count() == 0:
             periods = [

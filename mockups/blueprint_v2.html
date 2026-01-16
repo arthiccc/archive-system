@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archive Engine | Systematic Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&family=Newsreader:ital,wght@0,300;0,500;1,300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #080808;
+            --surface: #0c0c0c;
+            --border: #161616;
+            --text-main: #d1d1d1;
+            --text-dim: #525252;
+            --accent: #ffffff;
+        }
+        body {
+            font-family: 'Geist', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+        }
+        .serif { font-family: 'Newsreader', serif; }
+        .mono { font-family: 'Geist Mono', monospace; }
+        
+        /* Structural Discipline */
+        .panel { border: 1px solid var(--border); background: var(--surface); }
+        .divider { height: 1px; background: var(--border); width: 100%; }
+        .v-divider { width: 1px; background: var(--border); height: 100%; }
+
+        /* The Sheet Effect */
+        .document-sheet {
+            background: #ffffff;
+            color: #121212;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+        }
+
+        /* Micro-interactions */
+        .nav-link {
+            color: var(--text-dim);
+            transition: color 0.3s ease;
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .nav-link:hover, .nav-link.active { color: var(--accent); }
+
+        ::-webkit-scrollbar { width: 0px; }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden">
+
+    <!-- 1. TOP TELEMETRY STRIP (Global Navigation) -->
+    <nav class="h-14 flex items-center justify-between px-8 border-b border-[#161616] z-50 bg-black">
+        <div class="flex items-center gap-12">
+            <div class="flex items-center gap-3">
+                <div class="w-5 h-5 bg-white flex items-center justify-center text-[10px] text-black font-bold">A</div>
+                <span class="mono text-[11px] font-medium tracking-tighter">ARCHIVE_CORE_v2.0</span>
+            </div>
+            <div class="flex gap-8">
+                <a href="#" class="nav-link active">Workbench</a>
+                <a href="#" class="nav-link">Intelligence</a>
+                <a href="#" class="nav-link">Network</a>
+                <a href="#" class="nav-link">Settings</a>
+            </div>
+        </div>
+        <div class="flex items-center gap-8">
+            <div class="flex items-center gap-2">
+                <span class="mono text-[10px] text-zinc-600 uppercase">Latency</span>
+                <span class="mono text-[10px] text-zinc-400">12ms</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="mono text-[10px] text-zinc-600 uppercase">Load</span>
+                <span class="mono text-[10px] text-zinc-400">4.2%</span>
+            </div>
+            <div class="v-divider h-4"></div>
+            <div class="w-6 h-6 rounded-full border border-white/10 flex items-center justify-center">
+                <i class="bi bi-person text-[10px]"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. MAIN SYSTEM LAYOUT -->
+    <div class="flex flex-1 overflow-hidden">
+        
+        <!-- SIDEBAR: RESOURCE SELECTOR (Ultra-Minimal) -->
+        <aside class="w-64 flex flex-col border-r border-[#161616] bg-black">
+            <div class="p-6 border-b border-[#161616]">
+                <div class="flex items-center justify-between mb-6">
+                    <span class="text-[10px] font-bold text-zinc-500 tracking-widest uppercase">Registry</span>
+                    <i class="bi bi-filter text-zinc-500 text-xs"></i>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <div class="text-[11px] mono text-zinc-200 cursor-pointer flex items-center justify-between group">
+                        <span>Q4_STRATEGY.PDF</span>
+                        <div class="w-1.5 h-1.5 rounded-full bg-white opacity-0 group-hover:opacity-100 transition"></div>
+                    </div>
+                    <div class="text-[11px] mono text-zinc-600 cursor-pointer flex items-center justify-between group">
+                        <span>ANNUAL_AUDIT.PDF</span>
+                        <div class="w-1.5 h-1.5 rounded-full bg-white opacity-0 group-hover:opacity-100 transition"></div>
+                    </div>
+                    <div class="text-[11px] mono text-zinc-600 cursor-pointer flex items-center justify-between group">
+                        <span>MEETING_01.WAV</span>
+                        <div class="w-1.5 h-1.5 rounded-full bg-white opacity-0 group-hover:opacity-100 transition"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-auto p-6">
+                <div class="p-4 border border-[#161616] rounded-sm bg-[#0a0a0a]">
+                    <div class="text-[9px] mono text-zinc-600 mb-2 uppercase tracking-widest">Global Status</div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]"></div>
+                        <span class="text-[10px] font-medium text-zinc-400 uppercase">Engines_Nominal</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- WORKSPACE: THE DOCUMENT CANVAS -->
+        <main class="flex-1 relative flex items-center justify-center bg-[#050505]">
+            <!-- Breadcrumbs -->
+            <div class="absolute top-8 left-12 flex items-center gap-4">
+                <span class="text-[10px] mono text-zinc-600">RESOURCES</span>
+                <i class="bi bi-chevron-right text-[8px] text-zinc-800"></i>
+                <span class="text-[10px] mono text-zinc-400">Q4_STRATEGY.PDF</span>
+            </div>
+
+            <!-- The Sheet -->
+            <div class="document-sheet w-full max-w-2xl h-[85vh] rounded-sm relative overflow-hidden flex flex-col">
+                <div class="h-12 border-b border-zinc-100 flex items-center justify-between px-8 bg-zinc-50/50">
+                    <span class="mono text-[9px] text-zinc-400 uppercase tracking-widest">Precision_View v1.2</span>
+                    <div class="flex gap-4">
+                        <i class="bi bi-zoom-in text-zinc-300 text-xs"></i>
+                        <i class="bi bi-zoom-out text-zinc-300 text-xs"></i>
+                    </div>
+                </div>
+                <div class="flex-1 p-20 overflow-auto">
+                    <header class="mb-16">
+                        <div class="serif italic text-zinc-400 text-lg mb-4">Strategic Overview</div>
+                        <h1 class="serif text-5xl font-light tracking-tight leading-none text-black">The Systematic Archive</h1>
+                    </header>
+                    <div class="serif text-xl leading-relaxed space-y-8 text-zinc-800 opacity-90">
+                        <p>This document serves as the foundation for the <span class="font-medium text-black">Archive Engine v2</span>. Our design philosophy is simple: clear the path for information.</p>
+                        <p>The "Archive on Steroids" is not about adding more UI; it is about adding more <span class="italic text-zinc-500">capability</span> behind a disciplined front. We prioritize high-speed retrieval and automated intelligence mapping.</p>
+                        <div class="py-12 border-y border-zinc-100 my-12 flex justify-between items-center">
+                            <div>
+                                <div class="mono text-[10px] text-zinc-400 uppercase mb-1">Entity</div>
+                                <div class="text-sm font-semibold">GLOBAL_REVENUE</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="mono text-[10px] text-zinc-400 uppercase mb-1">Status</div>
+                                <div class="text-sm font-semibold text-green-600">+14.2% Growth</div>
+                            </div>
+                        </div>
+                        <p>Long visit times are achieved through comfort. The contrast between the obsidian environment and the bright document sheet creates a natural focal point, reducing cognitive load.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Floating Audio Control (Steroid UI) -->
+            <div class="absolute bottom-12 right-12 w-16 h-48 border border-[#161616] bg-black flex flex-col items-center py-6 gap-6 rounded-full shadow-2xl">
+                <i class="bi bi-play-circle text-lg text-white"></i>
+                <div class="flex-1 w-0.5 bg-zinc-900 rounded-full relative">
+                    <div class="absolute bottom-0 left-0 w-full h-1/2 bg-white rounded-full"></div>
+                </div>
+                <span class="mono text-[9px] text-zinc-500 rotate-90 mb-2">04:20</span>
+            </div>
+        </main>
+
+        <!-- DIAGNOSTICS: AGENTIC TELEMETRY (Right Dock) -->
+        <aside class="w-72 border-l border-[#161616] flex flex-col bg-black">
+            <div class="p-6 border-b border-[#161616]">
+                <span class="text-[10px] font-bold text-zinc-500 tracking-widest uppercase mb-4 block">Trace Telemetry</span>
+                <div class="flex flex-col gap-4">
+                    <div class="flex flex-col gap-1">
+                        <div class="flex justify-between text-[10px] mono">
+                            <span class="text-zinc-600">OCR_PROCESSING</span>
+                            <span class="text-zinc-400">COMPLETE</span>
+                        </div>
+                        <div class="w-full h-0.5 bg-zinc-900 overflow-hidden">
+                            <div class="bg-white h-full w-full"></div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <div class="flex justify-between text-[10px] mono">
+                            <span class="text-zinc-600">LLM_SYNTHESIS</span>
+                            <span class="text-blue-500 animate-pulse">ACTIVE</span>
+                        </div>
+                        <div class="w-full h-0.5 bg-zinc-900 overflow-hidden">
+                            <div class="bg-blue-600 h-full w-1/3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex-1 p-6 overflow-auto">
+                <div class="mono text-[10px] leading-relaxed text-zinc-500 space-y-3">
+                    <div class="flex gap-3 text-zinc-700">
+                        <span class="w-4">01</span>
+                        <span>[ENGINE] CONSUME: PDF_8472</span>
+                    </div>
+                    <div class="flex gap-3 text-zinc-700">
+                        <span class="w-4">02</span>
+                        <span>[VISION] SCAN_PAGES: [1, 2, 3, 4]</span>
+                    </div>
+                    <div class="flex gap-3 text-white">
+                        <span class="w-4">03</span>
+                        <span>[AGENT] PLAN_EXECUTE: SUMMARIZE</span>
+                    </div>
+                    <div class="flex gap-3 text-zinc-800">
+                        <span class="w-4">04</span>
+                        <span>[SEARCH] INDEX_VECTORS: MEILI_V1</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 border-t border-[#161616] bg-[#050505]">
+                <div class="flex items-center gap-3 mb-4">
+                    <i class="bi bi-stars text-white text-sm"></i>
+                    <span class="text-[10px] font-bold uppercase tracking-widest">AI Insights</span>
+                </div>
+                <p class="serif italic text-xs leading-relaxed text-zinc-500">
+                    This document correlates with "Founder_Note_v1" via semantic bridge [LOCAL_AI]. Recommend cross-referencing for the board presentation.
+                </p>
+            </div>
+        </aside>
+    </div>
+
+</body>
+</html>

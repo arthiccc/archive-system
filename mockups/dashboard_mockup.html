@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Archive Engine | Command Center Mockup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050505;
+            color: #e5e5e5;
+            overflow: hidden;
+        }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glass {
+            background: rgba(15, 15, 15, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .accent-border {
+            border-left: 2px solid #3b82f6;
+        }
+        .trace-line {
+            position: absolute;
+            left: 19px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .status-glow {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #222;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col">
+
+    <!-- Global Command Bar (Floating) -->
+    <div class="fixed top-6 left-1/2 -translate-x-1/2 w-full max-w-2xl z-50">
+        <div class="glass rounded-2xl p-1 flex items-center shadow-2xl">
+            <div class="flex items-center justify-center w-12 h-12 text-blue-500">
+                <i class="bi bi-command text-xl"></i>
+            </div>
+            <input type="text" placeholder="Type a command or search (Cmd+K)..." 
+                   class="bg-transparent border-none outline-none flex-1 text-lg px-2 text-white placeholder-gray-500">
+            <div class="flex gap-2 p-2">
+                <span class="px-2 py-1 glass rounded text-[10px] mono text-gray-400">ESC</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Sidebar -->
+    <div class="flex flex-1 pt-20">
+        <nav class="w-64 border-r border-white/10 p-4 flex flex-col gap-6">
+            <div class="flex items-center gap-3 px-2">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center italic font-bold">A</div>
+                <h1 class="text-sm font-bold tracking-widest uppercase">Archive Engine</h1>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <div class="text-[10px] uppercase text-gray-500 font-bold px-2 mb-2 tracking-widest">Workspace</div>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/5 text-white">
+                    <i class="bi bi-grid-1x2-fill"></i> <span class="text-sm">Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-white/5 transition">
+                    <i class="bi bi-file-earmark-text"></i> <span class="text-sm">All Documents</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-white/5 transition">
+                    <i class="bi bi-mic"></i> <span class="text-sm">Audio Archive</span>
+                </a>
+            </div>
+
+            <div class="mt-auto p-4 glass rounded-xl flex flex-col gap-3">
+                <div class="text-[10px] uppercase text-gray-500 font-bold tracking-widest">Engines Status</div>
+                <div class="flex items-center justify-between">
+                    <span class="text-xs mono">VISION_OCR</span>
+                    <span class="w-2 h-2 rounded-full bg-green-500 status-glow"></span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-xs mono">AUDIO_STT</span>
+                    <span class="w-2 h-2 rounded-full bg-blue-500 status-glow animate-pulse"></span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-xs mono">LLM_CORE</span>
+                    <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+                </div>
+                <div class="mt-2 text-[10px] text-gray-500 mono">GPU: 42°C | VRAM: 4.2GB</div>
+            </div>
+        </nav>
+
+        <!-- Main Workspace (Side-by-Side) -->
+        <main class="flex-1 flex overflow-hidden">
+            
+            <!-- Left Side: Document View / Workspace -->
+            <div class="flex-1 overflow-auto bg-black p-8">
+                <div class="max-w-4xl mx-auto">
+                    <div class="flex items-center justify-between mb-8">
+                        <div>
+                            <h2 class="text-3xl font-bold mb-1">Q4 Financial Strategy.pdf</h2>
+                            <p class="text-gray-500 text-sm mono">ID: doc_84729 • Consumed: 2026-01-10</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <button class="glass p-2 px-4 rounded-lg text-sm hover:bg-white/10"><i class="bi bi-share"></i> Share</button>
+                            <button class="bg-blue-600 p-2 px-4 rounded-lg text-sm font-bold hover:bg-blue-500 transition">Download</button>
+                        </div>
+                    </div>
+
+                    <!-- PDF Preview Mockup -->
+                    <div class="w-full aspect-[1/1.414] glass rounded-2xl p-12 flex flex-col gap-6 shadow-2xl relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle, #fff 1px, transparent 1px); background-size: 20px 20px;"></div>
+                        <div class="h-8 w-2/3 bg-white/10 rounded"></div>
+                        <div class="h-4 w-full bg-white/5 rounded"></div>
+                        <div class="h-4 w-full bg-white/5 rounded"></div>
+                        <div class="h-4 w-5/6 bg-white/5 rounded"></div>
+                        <div class="grid grid-cols-2 gap-4 mt-8">
+                            <div class="h-32 glass rounded-lg p-4 flex flex-col justify-end">
+                                <div class="h-4 w-1/2 bg-blue-500/20 rounded"></div>
+                            </div>
+                            <div class="h-32 glass rounded-lg p-4 flex flex-col justify-end">
+                                <div class="h-4 w-1/2 bg-blue-500/20 rounded"></div>
+                            </div>
+                        </div>
+                        <div class="h-4 w-full bg-white/5 rounded mt-4"></div>
+                        <div class="h-4 w-4/6 bg-white/5 rounded"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Agentic Trace & Intelligence -->
+            <div class="w-96 border-l border-white/10 flex flex-col glass overflow-hidden">
+                <div class="flex border-b border-white/10">
+                    <button class="flex-1 py-4 text-xs font-bold uppercase tracking-widest border-b-2 border-blue-500">Agentic Trace</button>
+                    <button class="flex-1 py-4 text-xs font-bold uppercase tracking-widest text-gray-500">Metadata</button>
+                </div>
+
+                <div class="flex-1 overflow-auto p-6 relative">
+                    <div class="trace-line"></div>
+                    
+                    <div class="flex flex-col gap-8">
+                        <!-- Trace Step 1 -->
+                        <div class="relative pl-10">
+                            <div class="absolute left-0 w-10 h-10 flex items-center justify-center">
+                                <div class="w-2.5 h-2.5 rounded-full bg-green-500 z-10"></div>
+                            </div>
+                            <div class="text-[10px] mono text-gray-500 mb-1">00:00:01.24 - CONSUMPTION</div>
+                            <h4 class="text-sm font-bold text-white">File Ingested</h4>
+                            <p class="text-xs text-gray-400 mt-1">Identified as PDF/Binary. MIME: application/pdf.</p>
+                        </div>
+
+                        <!-- Trace Step 2 -->
+                        <div class="relative pl-10">
+                            <div class="absolute left-0 w-10 h-10 flex items-center justify-center">
+                                <div class="w-2.5 h-2.5 rounded-full bg-green-500 z-10"></div>
+                            </div>
+                            <div class="text-[10px] mono text-gray-500 mb-1">00:00:02.10 - VISION_ENGINE</div>
+                            <h4 class="text-sm font-bold text-white">OCR Analysis</h4>
+                            <p class="text-xs text-gray-400 mt-1">Extracted 1,240 words across 4 pages. Quality: 98%.</p>
+                        </div>
+
+                        <!-- Trace Step 3 -->
+                        <div class="relative pl-10">
+                            <div class="absolute left-0 w-10 h-10 flex items-center justify-center">
+                                <div class="w-2.5 h-2.5 rounded-full bg-blue-500 status-glow z-10 animate-pulse"></div>
+                            </div>
+                            <div class="text-[10px] mono text-blue-400 mb-1">00:00:03.45 - AGENT_LLM</div>
+                            <h4 class="text-sm font-bold text-white italic">Thinking...</h4>
+                            <div class="mt-3 p-3 glass rounded-lg">
+                                <p class="text-[11px] leading-relaxed text-gray-300">
+                                    <span class="text-blue-400">PLAN:</span> I am extracting financial entities and generating a summary for the executive board. 
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Intelligence Output -->
+                        <div class="mt-4 p-4 glass rounded-xl border border-blue-500/30 accent-border">
+                            <div class="flex items-center gap-2 mb-3">
+                                <i class="bi bi-stars text-blue-400"></i>
+                                <span class="text-xs font-bold uppercase">AI Summary</span>
+                            </div>
+                            <p class="text-xs leading-relaxed text-gray-300 italic">
+                                "The document outlines a 15% increase in R&D spending for Q4, specifically targeting the new autonomous engine core. Revenue projections remain stable at $12.4M."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Stats -->
+                <div class="p-4 border-t border-white/10 flex items-center justify-between text-[10px] mono text-gray-500">
+                    <div>PROCESSED BY <span class="text-blue-500">ENGINE_v2.0</span></div>
+                    <div>1.4s TOTAL</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

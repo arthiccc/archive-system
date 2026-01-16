@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archive Engine | The Sanctuary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=Geist+Mono:wght@300;500&family=Geist:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f1010;
+            --card: #161717;
+            --accent: #d4d4d8;
+            --text-dim: #71717a;
+        }
+        body {
+            font-family: 'Geist', sans-serif;
+            background-color: var(--bg);
+            color: var(--accent);
+            background-image: url("https://www.transparenttextures.com/patterns/carbon-fibre.png");
+            background-blend-mode: overlay;
+        }
+        .serif { font-family: 'Fraunces', serif; }
+        .mono { font-family: 'Geist Mono', monospace; }
+        
+        .workbench-canvas {
+            background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .paper-card {
+            background: var(--card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .paper-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .knowledge-stream::-webkit-scrollbar { display: none; }
+
+        .glow-soft {
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
+        }
+
+        .ambient-light {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 300px;
+            background: radial-gradient(circle at 50% -20%, rgba(255,255,255,0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden">
+    <div class="ambient-light"></div>
+
+    <!-- Minimal Header -->
+    <header class="h-16 flex items-center justify-between px-8 z-10">
+        <div class="flex items-center gap-6">
+            <div class="serif italic text-2xl font-light tracking-tight">Archive Engine</div>
+            <nav class="flex gap-6 text-[11px] uppercase tracking-[0.2em] text-zinc-500 font-semibold">
+                <a href="#" class="text-zinc-200">Workbench</a>
+                <a href="#" class="hover:text-zinc-200 transition">Constellations</a>
+                <a href="#" class="hover:text-zinc-200 transition">Deep Read</a>
+            </nav>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="mono text-[10px] text-zinc-600">SYSTEM_READY // 42°C</div>
+            <div class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-xs">
+                <i class="bi bi-person"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden workbench-canvas">
+        
+        <!-- Left: Knowledge Stream (The Peripheral) -->
+        <aside class="w-80 flex flex-col p-6 gap-6 z-10">
+            <div class="flex flex-col">
+                <span class="mono text-[10px] text-zinc-500 uppercase mb-4 tracking-widest">Knowledge Stream</span>
+                <div class="knowledge-stream flex flex-col gap-4 overflow-y-auto pr-2">
+                    <!-- Related Card 1 -->
+                    <div class="p-4 rounded-lg bg-zinc-900/50 border border-white/5 hover:border-white/10 transition group cursor-pointer">
+                        <span class="mono text-[9px] text-blue-400/50 uppercase">Related • 0.84 match</span>
+                        <h4 class="text-xs font-semibold mt-1 group-hover:text-white transition">2024 Market Synthesis</h4>
+                        <p class="text-[10px] text-zinc-500 mt-2 leading-relaxed">AI analysis suggests a convergence between this and your current workspace...</p>
+                    </div>
+                    <!-- Related Card 2 -->
+                    <div class="p-4 rounded-lg bg-zinc-900/50 border border-white/5 hover:border-white/10 transition group cursor-pointer">
+                        <span class="mono text-[9px] text-zinc-600 uppercase">Archive • 2 years ago</span>
+                        <h4 class="text-xs font-semibold mt-1 group-hover:text-white transition">Founder's Note on Scalability</h4>
+                        <div class="flex gap-1 mt-2">
+                            <span class="w-1 h-1 rounded-full bg-zinc-700"></span>
+                            <span class="w-1 h-1 rounded-full bg-zinc-700"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Global AI Interaction -->
+            <div class="mt-auto">
+                <div class="p-4 rounded-2xl glass border border-white/10 bg-zinc-900/30">
+                    <textarea placeholder="Speak to the archive..." 
+                              class="w-full bg-transparent border-none outline-none text-xs resize-none h-20 placeholder-zinc-700 serif italic"></textarea>
+                    <div class="flex justify-between items-center mt-2">
+                        <i class="bi bi-stars text-blue-400/50 text-sm"></i>
+                        <span class="mono text-[9px] text-zinc-600">CMD + ENTER</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace: The Workbench -->
+        <main class="flex-1 relative overflow-hidden flex items-center justify-center p-12">
+            
+            <!-- Spatial Card 1: Main Document -->
+            <div class="paper-card w-full max-w-2xl rounded-sm overflow-hidden flex flex-col absolute z-20 shadow-[0_50px_100px_rgba(0,0,0,0.8)]">
+                <div class="h-1 bg-zinc-800 w-full">
+                    <div class="h-full bg-zinc-500 w-1/3"></div>
+                </div>
+                <div class="p-12 md:p-16 overflow-auto max-h-[80vh] bg-[#1a1b1b]">
+                    <div class="serif text-zinc-500 italic text-sm mb-8 tracking-wide">Financial Strategy / Q4 / Confidential</div>
+                    <h2 class="serif text-4xl text-zinc-200 leading-tight mb-10">The Convergence of Local AI and Spatial Computing</h2>
+                    <div class="serif text-lg text-zinc-400 leading-relaxed space-y-6 opacity-90">
+                        <p>In the transition toward <span class="text-zinc-100 font-semibold underline decoration-zinc-700 underline-offset-4">steroid-level archiving</span>, we must consider the user's psychological state. A dashboard is for a pilot; a sanctuary is for a philosopher.</p>
+                        <p>The architecture of the <span class="mono text-sm bg-zinc-800 px-1 text-zinc-300">ArchiveEngine_v2</span> allows for the simultaneous consumption of multi-modal streams. This is not just a storage system, but a generative layer that sits beneath the daily workflow of the modern company.</p>
+                        <p>To stay longer, the user must feel that the digital medium has weight. We achieve this through tactile digitalism—soft shadows, intentional delays, and serif-driven deep reading environments.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spatial Card 2: AI Trace (Floating) -->
+            <div class="paper-card w-64 rounded-xl p-6 absolute top-20 right-20 z-30 transform rotate-2 hidden lg:block border-blue-900/20">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></div>
+                    <span class="mono text-[10px] uppercase tracking-widest text-zinc-400">Agentic Biography</span>
+                </div>
+                <div class="space-y-4">
+                    <div class="border-l border-zinc-800 pl-4 relative">
+                        <div class="text-[9px] mono text-zinc-600 mb-1">CONSUME</div>
+                        <div class="text-xs">File materialized as PDF.</div>
+                    </div>
+                    <div class="border-l border-zinc-800 pl-4 relative">
+                        <div class="text-[9px] mono text-zinc-600 mb-1">IMAGINE</div>
+                        <div class="text-xs text-zinc-400 italic">Synthesizing semantic links to Founder's Note...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spatial Card 3: Audio Waveform (Bottom Float) -->
+            <div class="paper-card h-24 w-96 rounded-2xl p-4 absolute bottom-10 left-1/2 -translate-x-1/2 z-40 flex items-center gap-4 px-6 border-zinc-800/50">
+                <button class="w-10 h-10 rounded-full border border-zinc-700 flex items-center justify-center hover:bg-zinc-800 transition">
+                    <i class="bi bi-play-fill text-zinc-300"></i>
+                </button>
+                <div class="flex-1 h-8 flex items-center gap-[2px]">
+                    <div class="h-2 w-1 bg-zinc-800 rounded-full"></div>
+                    <div class="h-4 w-1 bg-zinc-800 rounded-full"></div>
+                    <div class="h-6 w-1 bg-zinc-700 rounded-full"></div>
+                    <div class="h-3 w-1 bg-zinc-800 rounded-full"></div>
+                    <div class="h-5 w-1 bg-zinc-500 rounded-full"></div>
+                    <div class="h-8 w-1 bg-zinc-300 rounded-full"></div>
+                    <div class="h-4 w-1 bg-zinc-700 rounded-full"></div>
+                    <div class="h-6 w-1 bg-zinc-800 rounded-full"></div>
+                    <div class="h-2 w-1 bg-zinc-800 rounded-full"></div>
+                    <div class="h-4 w-1 bg-zinc-800 rounded-full"></div>
+                    <div class="h-5 w-1 bg-zinc-700 rounded-full"></div>
+                    <div class="h-8 w-1 bg-zinc-300 rounded-full"></div>
+                    <div class="h-3 w-1 bg-zinc-800 rounded-full"></div>
+                </div>
+                <div class="mono text-[10px] text-zinc-500 tracking-tighter">04:20 / 12:00</div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Background Decoration -->
+    <div class="fixed bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-900/5 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="fixed top-[-10%] left-[-10%] w-[400px] h-[400px] bg-zinc-800/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+</body>
+</html>

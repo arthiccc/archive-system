@@ -1,5 +1,8 @@
 import os
 import subprocess
+import pytesseract
+from pdf2image import convert_from_path
+from PIL import Image
 from PyPDF2 import PdfReader
 from docx import Document as DocxDocument
 
@@ -14,6 +17,18 @@ def extract_text_content(file_path, mime_type):
                 page_text = page.extract_text()
                 if page_text:
                     text += page_text + "\n"
+
+            # If no text was extracted, try OCR
+            if not text.strip():
+                try:
+                    images = convert_from_path(file_path)
+                    for image in images:
+                        text += pytesseract.image_to_string(image) + "\n"
+                except Exception as ocr_e:
+                    print(f"OCR failed for PDF {file_path}: {ocr_e}")
+
+        elif mime_type.startswith("image/"):
+            text = pytesseract.image_to_string(Image.open(file_path))
 
         elif mime_type in [
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -37,7 +52,7 @@ def extract_text_content(file_path, mime_type):
                 pass
 
     except Exception as e:
-        pass
+        print(f"Text extraction error for {file_path}: {e}")
 
     return text.strip()[:100000]
 
@@ -88,3 +103,30 @@ def log_audit_action(action, document_id=None, details=None, user_id=None):
 
     db.session.add(log)
     db.session.commit()
+
+
+def run_auto_matching(document):
+    """
+    Paperless-like feature: Automatically suggest or assign tags/category based on content.
+    """
+    from app.models import Tag, Category
+    from app.extensions import db
+
+    content = (document.content_text or "").lower()
+    title = (document.title or "").lower()
+    combined = f"{title} {content}"
+
+    # Simple keyword-based matching
+    all_tags = Tag.query.all()
+    suggested_tags = []
+
+    for tag in all_tags:
+        if tag.name.lower() in combined:
+            if tag not in document.tags:
+                document.tags.append(tag)
+                suggested_tags.append(tag.name)
+
+    if suggested_tags:
+        db.session.commit()
+
+    return suggested_tags

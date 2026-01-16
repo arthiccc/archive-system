@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Archive Engine | Terminal Core</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Geist Mono', monospace; background: #000; color: #33ff33; padding: 20px; overflow: hidden; }
+        .grid-tui { display: grid; grid-template-columns: 300px 1fr 350px; height: calc(100vh - 40px); gap: 20px; }
+        .box { border: 1px solid #33ff33; padding: 20px; position: relative; }
+        .label { position: absolute; top: -10px; left: 10px; background: #000; padding: 0 5px; font-size: 10px; font-weight: bold; }
+        ::-webkit-scrollbar { width: 0px; }
+        .cursor { display: inline-block; width: 8px; height: 15px; background: #33ff33; animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    </style>
+</head>
+<body>
+    <div class="grid-tui">
+        <div class="box">
+            <div class="label">REGISTRY_LIST</div>
+            <div class="space-y-4 text-xs">
+                <div class="text-white font-bold bg-green-900/20 p-1">> Q4_FINANCE.PDF [842KB]</div>
+                <div>-- AUDIT_LOG.EXH [1.2MB]</div>
+                <div>-- MTG_VOICE.WAV [42MB]</div>
+                <div class="mt-12 opacity-40">-- ARCHIVE_CMD_INIT</div>
+                <div class="opacity-40">-- VECTOR_INDEX_GEN</div>
+            </div>
+        </div>
+        <div class="box overflow-auto">
+            <div class="label">OBJECT_INSPECTOR</div>
+            <div class="text-[11px] leading-tight space-y-4">
+                <div class="border-b border-green-900 pb-4 mb-8">
+                    HEAD: Q4_FINANCE_STRATEGY<br>
+                    UUID: 8472-X91-Z00<br>
+                    TIME: 2026-01-10_11:24:01
+                </div>
+                <p>EXTRACTED_TEXT_STREAM:</p>
+                <div class="bg-green-900/10 p-4 border border-green-900/30">
+                    Precision architecture for high-performance archiving. In the transition toward STEROID-LEVEL systems, we prioritize architectural rigor. The archive is not a box; it is a live engine. We leverage local multi-modal AI to analyze every byte of data as it materializes.<span class="cursor"></span>
+                </div>
+                <div class="grid grid-cols-2 gap-8 mt-12">
+                    <div class="border border-green-900/30 p-2 text-[9px]">
+                        ENTITY_MAP:<br>
+                        [042, 112] : "REVENUE"<br>
+                        [089, 412] : "$12.4M"<br>
+                        [112, 092] : "GROWTH"
+                    </div>
+                    <div class="border border-green-900/30 p-2 text-[9px]">
+                        CLUSTER_LINKS:<br>
+                        MTG_TRANSCRIPT_V4 [0.92]<br>
+                        STRAT_2024_BACK [0.84]
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box flex flex-col gap-8">
+            <div class="label">ENGINE_TELEMETRY</div>
+            <div class="text-[10px] space-y-2">
+                <div class="flex justify-between"><span>CORE_ID</span><span>0xFA29</span></div>
+                <div class="flex justify-between"><span>VRAM_USAGE</span><span>4.2GB/24GB</span></div>
+                <div class="flex justify-between"><span>TEMP</span><span>42°C</span></div>
+            </div>
+            <div class="flex-1 border-t border-green-900 pt-4">
+                <div class="label" style="top: 100px;">PROCESS_TRACE</div>
+                <div class="text-[9px] space-y-3 opacity-60">
+                    <div>11:24:01 INGEST_OK</div>
+                    <div>11:24:02 VISION_CORE_INIT</div>
+                    <div class="text-white">11:24:03 LLM_REASONING_START</div>
+                    <div>11:24:05 MEILI_V1_INDEX_OK</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

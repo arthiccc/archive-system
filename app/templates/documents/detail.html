@@ -7,6 +7,9 @@
         <p class="text-muted mb-0">{{ document.original_filename }}</p>
     </div>
     <div>
+        <a href="{{ url_for('documents.editor', doc_id=document.id) }}" class="btn btn-primary">
+            <i class="bi bi-pencil-square"></i> Open in Editor
+        </a>
         <a href="{{ url_for('documents.edit', doc_id=document.id) }}" class="btn btn-outline-primary">
             <i class="bi bi-pencil"></i> Edit
         </a>
@@ -38,6 +41,22 @@
                 {% endif %}
             </div>
         </div>
+        
+        {% if document.content_text %}
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Extracted Content</h5>
+                <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#extractedContent">
+                    Toggle
+                </button>
+            </div>
+            <div id="extractedContent" class="collapse">
+                <div class="card-body">
+                    <pre class="bg-light p-3" style="max-height: 400px; overflow: auto; white-space: pre-wrap; font-size: 0.85rem;">{{ document.content_text }}</pre>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
     <div class="col-md-4">
         <div class="card mb-3">
@@ -53,6 +72,10 @@
                     <tr>
                         <td><strong>Academic Period:</strong></td>
                         <td>{{ document.academic_period.name if document.academic_period else '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Correspondent:</strong></td>
+                        <td>{{ document.correspondent.name if document.correspondent else '-' }}</td>
                     </tr>
                     <tr>
                         <td><strong>File Size:</strong></td>

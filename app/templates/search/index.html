@@ -63,7 +63,13 @@
                         <i class="bi bi-file-earmark"></i>
                     </div>
                     <div>
-                        <div class="document-card-title">{{ doc.title }}</div>
+                        <div class="document-card-title">
+                            {% if highlights and highlights.get(doc.id) and highlights.get(doc.id).get('title') %}
+                                {{ highlights.get(doc.id).get('title')|safe }}
+                            {% else %}
+                                {{ doc.title }}
+                            {% endif %}
+                        </div>
                         <div class="document-card-meta">{{ doc.original_filename }}</div>
                     </div>
                 </div>
@@ -73,6 +79,11 @@
                 <div class="document-card-meta">
                     <i class="bi bi-calendar3"></i> {{ doc.uploaded_at.strftime('%Y-%m-%d') if doc.uploaded_at else '-' }}
                 </div>
+                {% if highlights and highlights.get(doc.id) and highlights.get(doc.id).get('content') %}
+                <div class="search-snippet mt-2 mb-2 p-2 bg-light rounded" style="font-size: 0.85rem; border-left: 3px solid #0d6efd;">
+                    ...{{ highlights.get(doc.id).get('content')|safe }}...
+                </div>
+                {% endif %}
                 {% if doc.tags %}
                 <div class="document-card-tags">
                     {% for tag in doc.tags %}

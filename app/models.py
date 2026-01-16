@@ -70,6 +70,26 @@ class AcademicPeriod(db.Model):
         return f"<AcademicPeriod {self.name}>"
 
 
+class Correspondent(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<Correspondent {self.name}>"
+
+
+class LetterTemplate(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    file_path = db.Column(db.String(500), nullable=False)
+    variables_json = db.Column(db.Text)  # List of detected tags in the docx
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<LetterTemplate {self.name}>"
+
+
 class Document(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
@@ -81,8 +101,18 @@ class Document(db.Model):
     content_text = db.Column(db.Text)
     description = db.Column(db.Text)
     metadata_json = db.Column(db.Text)
+
+    # Year/Month Steroids
+    year = db.Column(db.Integer, index=True)
+    month = db.Column(db.Integer, index=True)
+
     category_id = db.Column(db.Integer, db.ForeignKey("category.id"))
     academic_period_id = db.Column(db.Integer, db.ForeignKey("academic_period.id"))
+    correspondent_id = db.Column(db.Integer, db.ForeignKey("correspondent.id"))
+    template_id = db.Column(
+        db.Integer, db.ForeignKey("letter_template.id"), nullable=True
+    )
+
     uploaded_by = db.Column(db.Integer, db.ForeignKey("admin_user.id"))
     uploaded_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(
@@ -93,6 +123,8 @@ class Document(db.Model):
 
     category = db.relationship("Category", backref="documents")
     academic_period = db.relationship("AcademicPeriod", backref="documents")
+    correspondent = db.relationship("Correspondent", backref="documents")
+    template = db.relationship("LetterTemplate", backref="generated_letters")
     uploader = db.relationship("AdminUser", backref="documents")
 
     def __repr__(self):

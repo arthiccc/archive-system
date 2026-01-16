@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archive Engine | {% block title %}Institutional Apex{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,500;1,6..72,300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --surface: #080808;
+            --border: #1a1a1a;
+            --text: #d1d1d1;
+            --dim: #444444;
+            --accent: #ffffff;
+            --blue: #0066ff;
+        }
+        body {
+            font-family: 'Geist', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            letter-spacing: -0.01em;
+            overflow: hidden;
+        }
+        .mono { font-family: 'Geist Mono', monospace; }
+        .serif { font-family: 'Newsreader', serif; }
+        
+        .b-1 { border: 1px solid var(--border); }
+        .br-1 { border-right: 1px solid var(--border); }
+        .bl-1 { border-left: 1px solid var(--border); }
+        .bb-1 { border-bottom: 1px solid var(--border); }
+        .bt-1 { border-top: 1px solid var(--border); }
+
+        .document-canvas {
+            background-color: #030303;
+            background-image: radial-gradient(circle, #111 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+        
+        .label-tiny {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--dim);
+        }
+
+        ::-webkit-scrollbar { width: 0px; }
+        
+        .app-grid {
+            display: grid;
+            grid-template-columns: 64px 300px 1fr 360px;
+            grid-template-rows: 56px 1fr 40px;
+            height: 100vh;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="h-screen flex flex-col">
+
+    <div class="app-grid">
+        <!-- HEADER -->
+        <header class="col-span-4 bg-black bb-1 flex items-center justify-between px-6 z-50">
+            <div class="flex items-center gap-12">
+                <div class="flex items-center gap-3">
+                    <div class="w-4 h-4 bg-white rounded-sm"></div>
+                    <span class="mono text-xs font-bold tracking-tighter uppercase">ARCHIVE_KERNEL_V4</span>
+                </div>
+                <nav class="flex gap-8">
+                    <a href="{{ url_for('engines.workbench') }}" class="text-[11px] font-bold uppercase tracking-widest {% if request.endpoint == 'engines.workbench' %}text-white border-b-2 border-white pb-4 mt-4{% else %}text-zinc-600 hover:text-white transition{% endif %}">Workbench</a>
+                    <a href="{{ url_for('engines.registry') }}" class="text-[11px] font-bold uppercase tracking-widest {% if request.endpoint == 'engines.registry' %}text-white border-b-2 border-white pb-4 mt-4{% else %}text-zinc-600 hover:text-white transition{% endif %}">Registry</a>
+                </nav>
+            </div>
+            <div class="flex items-center gap-10">
+                <div class="flex flex-col items-end">
+                    <span class="label-tiny">System_Status</span>
+                    <span class="mono text-xs text-green-500 uppercase font-bold">Nominal</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- MODE RAIL -->
+        <nav class="border-r-f flex flex-col items-center py-8 gap-10 bg-black br-1">
+            <i class="bi bi-grid-1x2 text-white text-xl"></i>
+            <i class="bi bi-search text-zinc-700 text-xl hover:text-white transition cursor-pointer"></i>
+            <i class="bi bi-mic text-zinc-700 text-xl hover:text-white transition cursor-pointer"></i>
+            <div class="mt-auto flex flex-col gap-8">
+                <i class="bi bi-terminal text-zinc-700 text-lg"></i>
+                <div class="w-6 h-6 rounded-full border border-zinc-800 flex items-center justify-center text-[10px] mono">JS</div>
+            </div>
+        </nav>
+
+        {% block content %}{% endblock %}
+
+        <!-- COMMAND TERMINAL -->
+        <footer class="col-span-4 bg-black bt-1 flex items-center px-6 gap-4">
+            <span class="mono text-[11px] text-blue-600 font-bold">></span>
+            <input type="text" placeholder="EXECUTE_SYSTEM_COMMAND..." 
+                   class="bg-transparent outline-none flex-1 text-[11px] mono text-zinc-500 placeholder-zinc-900">
+            <div class="flex gap-6">
+                <span class="label-tiny">Lat: 0.02ms</span>
+            </div>
+        </footer>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="fixed top-20 right-6 z-[100] flex flex-col gap-3">
+          {% for category, message in messages %}
+            <div class="p-4 {% if category == 'error' %}bg-red-900/80{% else %}bg-zinc-900/80{% endif %} border border-white/10 backdrop-blur text-white text-xs mono rounded shadow-2xl">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+</body>
+</html>

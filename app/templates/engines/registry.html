@@ -1,0 +1,139 @@
+{% extends "engines/base_apex.html" %}
+{% block title %}Registry{% endblock %}
+
+{% block content %}
+<!-- SIDEBAR: TIME FILTERS -->
+<aside class="w-80 flex flex-col br-1 bg-black">
+    <div class="h-10 flex items-center px-5 bg-zinc-900/20 bb-1">
+        <span class="label-tiny">Time_Matrix</span>
+    </div>
+    
+    <div class="p-6 flex flex-col gap-8 overflow-auto">
+        <section>
+            <span class="label-tiny block mb-4">Select_Year</span>
+            <div class="grid grid-cols-2 gap-2">
+                <a href="{{ url_for('engines.registry', month=selected_month) }}" 
+                   class="p-2 b-1 text-center text-[10px] mono {% if not selected_year %}bg-white text-black{% else %}text-zinc-500 hover:text-white{% endif %} transition">ALL</a>
+                {% for year in years %}
+                <a href="{{ url_for('engines.registry', year=year, month=selected_month) }}" 
+                   class="p-2 b-1 text-center text-[10px] mono {% if selected_year == year %}bg-white text-black{% else %}text-zinc-500 hover:text-white{% endif %} transition">{{ year }}</a>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section>
+            <span class="label-tiny block mb-4">Select_Month</span>
+            <div class="grid grid-cols-3 gap-2">
+                <a href="{{ url_for('engines.registry', year=selected_year) }}" 
+                   class="p-2 b-1 text-center text-[10px] mono {% if not selected_month %}bg-white text-black{% else %}text-zinc-500 hover:text-white{% endif %} transition">ALL</a>
+                {% for m in range(1, 13) %}
+                <a href="{{ url_for('engines.registry', year=selected_year, month=m) }}" 
+                   class="p-2 b-1 text-center text-[10px] mono {% if selected_month == m %}bg-white text-black{% else %}text-zinc-500 hover:text-white{% endif %} transition">
+                    {{ ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"][m-1] }}
+                </a>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+
+    <div class="p-6 bg-zinc-900/10 bt-1 mt-auto">
+        <div class="flex justify-between items-center mb-2">
+            <span class="label-tiny">Total_Registry</span>
+            <span class="mono text-[10px] text-white">{{ documents|length }}</span>
+        </div>
+    </div>
+</aside>
+
+<!-- MAIN WORKSPACE: THE LEDGER -->
+<main class="flex-1 flex flex-col bg-black overflow-hidden">
+    <div class="h-10 flex items-center justify-between px-6 bg-zinc-900/20 bb-1">
+        <span class="label-tiny">Institutional_Ledger</span>
+        <div class="flex items-center gap-4">
+            <span class="label-tiny">Filter:</span>
+            <span class="mono text-[10px] text-blue-500">
+                {% if selected_year %}{{ selected_year }}{% else %}ALL_YEARS{% endif %} / 
+                {% if selected_month %}{{ ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"][selected_month-1] }}{% else %}ALL_MONTHS{% endif %}
+            </span>
+        </div>
+    </div>
+
+    <div class="flex-1 overflow-auto">
+        <table class="w-full text-left border-collapse">
+            <thead class="bb-1 sticky top-0 bg-black z-10">
+                <tr class="h-10">
+                    <th class="px-6 label-tiny">ID</th>
+                    <th class="px-6 label-tiny">Resource_Title</th>
+                    <th class="px-6 label-tiny">Date_Archived</th>
+                    <th class="px-6 label-tiny text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for doc in documents %}
+                <tr class="bb-1 hover:bg-[#0c0c0c] transition group">
+                    <td class="px-6 py-4 mono text-[10px] text-zinc-600 group-hover:text-blue-500 transition">#{{ doc.id }}</td>
+                    <td class="px-6 py-4">
+                        <div class="text-[11px] font-medium text-zinc-300 group-hover:text-white transition">{{ doc.title }}</div>
+                        <div class="text-[9px] mono text-zinc-600 mt-1 uppercase">{{ doc.mime_type.split('/')[-1] }} // {{ (doc.file_size / 1024)|round(1) }}KB</div>
+                    </td>
+                    <td class="px-6 py-4 mono text-[10px] text-zinc-500">{{ doc.uploaded_at.strftime('%Y-%m-%d') }}</td>
+                    <td class="px-6 py-4 text-right">
+                        <a href="{{ url_for('documents.download', doc_id=doc.id) }}" class="text-zinc-600 hover:text-white transition px-2"><i class="bi bi-download"></i></a>
+                        <a href="{{ url_for('documents.detail', doc_id=doc.id) }}" class="text-zinc-600 hover:text-white transition px-2"><i class="bi bi-eye"></i></a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="p-20 text-center">
+                        <div class="text-zinc-700">
+                            <i class="bi bi-search text-4xl mb-4 block"></i>
+                            <span class="mono text-[10px] uppercase">No documents found matching criteria</span>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<!-- RIGHT PANEL: ANALYTICS -->
+<aside class="w-96 bl-1 flex flex-col bg-black">
+    <div class="h-10 flex items-center px-5 bg-zinc-900/20 bb-1">
+        <span class="label-tiny">Ledger_Analytics</span>
+    </div>
+    
+    <div class="p-8 space-y-12">
+        <section>
+            <span class="label-tiny block mb-6">Volume_Distribution</span>
+            <!-- Simple Mockup Bar -->
+            <div class="flex flex-col gap-4">
+                <div class="space-y-2">
+                    <div class="flex justify-between text-[10px] mono">
+                        <span class="text-zinc-500 uppercase">Documents</span>
+                        <span class="text-white">82%</span>
+                    </div>
+                    <div class="h-0.5 bg-zinc-900 w-full overflow-hidden">
+                        <div class="bg-white h-full w-[82%]"></div>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex justify-between text-[10px] mono">
+                        <span class="text-zinc-500 uppercase">Audio_Streams</span>
+                        <span class="text-blue-500">18%</span>
+                    </div>
+                    <div class="h-0.5 bg-zinc-900 w-full overflow-hidden">
+                        <div class="bg-blue-600 h-full w-[18%]"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="p-6 border border-zinc-900 bg-zinc-950 rounded-sm">
+            <span class="label-tiny !text-blue-500 block mb-4">Registry_Health</span>
+            <p class="text-[11px] leading-relaxed text-zinc-500 italic">
+                All resources are mirrored across the institutional storage cluster. Meilisearch index is synchronized with PostgreSQL primary.
+            </p>
+        </section>
+    </div>
+</aside>
+{% endblock %}

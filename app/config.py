@@ -20,6 +20,11 @@ class Config:
     SEARCH_RESULTS_PER_PAGE = int(os.environ.get("SEARCH_RESULTS_PER_PAGE") or 25)
     AUDIT_LOG_ENABLED = os.environ.get("AUDIT_LOG_ENABLED", "true").lower() == "true"
 
+    # Meilisearch
+    MEILI_HTTP_ADDR = os.environ.get("MEILI_HTTP_ADDR") or "http://localhost:7700"
+    MEILI_MASTER_KEY = os.environ.get("MEILI_MASTER_KEY") or "masterKey"
+    MEILI_INDEX_NAME = os.environ.get("MEILI_INDEX_NAME") or "documents"
+
     @staticmethod
     def init_app(app):
         pass

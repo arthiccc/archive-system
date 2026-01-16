@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archive Engine | Blueprint Apex</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;700&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --surface: #050505;
+            --border: #111111;
+            --accent: #ffffff;
+            --muted: #333333;
+            --engine-blue: #0055ff;
+        }
+        body {
+            font-family: 'Geist', sans-serif;
+            background-color: var(--bg);
+            color: var(--accent);
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+        }
+        .mono { font-family: 'Geist Mono', monospace; }
+        
+        /* Rigid Grid Architecture */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 64px 280px 1fr 340px;
+            grid-template-rows: 48px 1fr 40px;
+            height: 100vh;
+        }
+
+        .border-fine { border: 1px solid var(--border); }
+        .border-r-fine { border-right: 1px solid var(--border); }
+        .border-b-fine { border-bottom: 1px solid var(--border); }
+        .border-t-fine { border-top: 1px solid var(--border); }
+
+        /* Component Styles */
+        .sheet-container {
+            background-color: #030303;
+            background-image: 
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .master-sheet {
+            background: white;
+            color: black;
+            width: 850px;
+            height: 1200px;
+            margin: 60px auto;
+            box-shadow: 0 80px 150px rgba(0,0,0,0.9);
+            padding: 100px;
+            position: relative;
+        }
+
+        .telemetry-block {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .label-tiny {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--muted);
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .value-mono {
+            font-size: 11px;
+            font-family: 'Geist Mono', monospace;
+            color: #ccc;
+        }
+
+        ::-webkit-scrollbar { width: 0px; }
+
+        .active-resource {
+            background: #0a0a0a;
+            border-left: 2px solid var(--engine-blue);
+        }
+
+        /* Spectrogram Line */
+        .spec-line {
+            height: 1px;
+            background: var(--muted);
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        .spec-line::after {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; height: 100%; width: 30%;
+            background: var(--engine-blue);
+            box-shadow: 0 0 10px var(--engine-blue);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="grid-layout">
+        
+        <!-- HEADER (Global Engine Status) -->
+        <header class="col-span-4 border-b-fine flex items-center justify-between px-6 bg-black">
+            <div class="flex items-center gap-10">
+                <div class="flex items-center gap-3">
+                    <div class="w-4 h-4 bg-white rounded-sm"></div>
+                    <span class="mono text-[11px] font-bold tracking-tight">APEX_ARCHIVE_CORE_v4.0</span>
+                </div>
+                <div class="flex gap-6">
+                    <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest cursor-pointer hover:text-white">Compute</span>
+                    <span class="text-[10px] font-bold text-white uppercase tracking-widest cursor-pointer">Registry</span>
+                    <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest cursor-pointer hover:text-white">Orchestra</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-8">
+                <div class="flex items-center gap-2">
+                    <span class="label-tiny !mb-0">Sync</span>
+                    <span class="value-mono text-green-500">NOMINAL</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="label-tiny !mb-0">Uptime</span>
+                    <span class="value-mono">142:12:04</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- MODE RAIL (Left) -->
+        <nav class="border-r-fine flex flex-col items-center py-8 gap-10 bg-black">
+            <i class="bi bi-layers-half text-white text-xl"></i>
+            <i class="bi bi-soundwave text-zinc-700 text-xl hover:text-white transition cursor-pointer"></i>
+            <i class="bi bi-diagram-3 text-zinc-700 text-xl hover:text-white transition cursor-pointer"></i>
+            <i class="bi bi-database text-zinc-700 text-xl hover:text-white transition cursor-pointer"></i>
+            <div class="mt-auto flex flex-col gap-8">
+                <i class="bi bi-terminal text-zinc-700 text-lg"></i>
+                <div class="w-6 h-6 rounded-full border border-zinc-800 flex items-center justify-center text-[10px] mono">JS</div>
+            </div>
+        </nav>
+
+        <!-- REGISTRY (Deep List) -->
+        <aside class="border-r-fine flex flex-col bg-surface overflow-hidden">
+            <div class="p-6 border-b-fine">
+                <span class="label-tiny">Master Registry</span>
+                <div class="mt-4 relative">
+                    <input type="text" placeholder="SEARCH_VAULT" 
+                           class="w-full bg-black border border-zinc-900 rounded-sm py-1 px-3 text-[10px] mono outline-none focus:border-zinc-700">
+                </div>
+            </div>
+            <div class="flex-1 overflow-auto">
+                <div class="p-5 border-b-fine active-resource cursor-pointer">
+                    <div class="flex justify-between mb-1">
+                        <span class="value-mono text-blue-500">ID_84729</span>
+                        <span class="value-mono text-zinc-700">1.2MB</span>
+                    </div>
+                    <div class="text-[11px] font-medium truncate mb-3">Institutional_Scaling_v4.pdf</div>
+                    <div class="flex gap-2">
+                        <span class="px-1.5 py-0.5 border border-zinc-800 text-[8px] mono text-zinc-500">OCR_V3</span>
+                        <span class="px-1.5 py-0.5 border border-zinc-800 text-[8px] mono text-green-600">SAFE</span>
+                    </div>
+                </div>
+                <div class="p-5 border-b-fine hover:bg-black transition cursor-pointer group">
+                    <div class="flex justify-between mb-1">
+                        <span class="value-mono text-zinc-500 group-hover:text-purple-500 transition">ID_01292</span>
+                        <span class="value-mono text-zinc-700">42.8MB</span>
+                    </div>
+                    <div class="text-[11px] font-medium truncate mb-3 text-zinc-500">Executive_Board_Session.wav</div>
+                    <div class="flex gap-2">
+                        <span class="px-1.5 py-0.5 border border-zinc-800 text-[8px] mono text-zinc-600">PARSING</span>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 bg-black border-t-fine">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="label-tiny">Storage Usage</span>
+                    <span class="value-mono">82%</span>
+                </div>
+                <div class="h-0.5 bg-zinc-900 w-full overflow-hidden">
+                    <div class="bg-white h-full w-[82%]"></div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- WORKSPACE (The Canvas) -->
+        <main class="sheet-container overflow-auto relative">
+            <div class="master-sheet">
+                <div class="flex justify-between items-start mb-24">
+                    <div>
+                        <span class="label-tiny !text-zinc-400">Archive Node: /root/vault/finance</span>
+                        <div class="value-mono !text-zinc-300">CRC32: 9283-FF12</div>
+                    </div>
+                    <div class="text-right">
+                        <span class="label-tiny !text-zinc-400">Precision Grade</span>
+                        <div class="value-mono text-blue-600 font-bold italic">APEX_HIGH</div>
+                    </div>
+                </div>
+
+                <div class="space-y-16">
+                    <section>
+                        <h1 class="text-5xl font-bold tracking-tighter leading-none mb-10 uppercase">The Steroid Engine</h1>
+                        <div class="text-lg leading-relaxed text-zinc-800 font-medium max-w-xl">
+                            The transition into a company-grade app engine requires the total abandonment of traditional UI paradigms.
+                        </div>
+                    </section>
+
+                    <div class="h-[1px] bg-zinc-100 w-full"></div>
+
+                    <section class="grid grid-cols-2 gap-16">
+                        <div class="space-y-6">
+                            <span class="label-tiny !text-zinc-400">Technical Brief</span>
+                            <p class="text-sm leading-relaxed text-zinc-600">
+                                Every object ingested by the core is treated as a multi-modal stream. The <span class="text-black font-bold">Audio Engine</span> performs recursive diarization while the <span class="text-black font-bold">Vision Engine</span> maps spatial coordinates for every pixel.
+                            </p>
+                        </div>
+                        <div class="space-y-6">
+                            <span class="label-tiny !text-zinc-400">Metadata Registry</span>
+                            <div class="space-y-3">
+                                <div class="flex justify-between text-[11px] border-b border-zinc-100 pb-1">
+                                    <span class="text-zinc-400">Entity_Type</span>
+                                    <span class="font-bold uppercase">Strategic_Plan</span>
+                                </div>
+                                <div class="flex justify-between text-[11px] border-b border-zinc-100 pb-1">
+                                    <span class="text-zinc-400">Recursive_Depth</span>
+                                    <span class="font-bold">04</span>
+                                </div>
+                                <div class="flex justify-between text-[11px]">
+                                    <span class="text-zinc-400">Agent_Confidence</span>
+                                    <span class="font-bold text-blue-600">0.992</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <!-- DIAGNOSTICS (Right) -->
+        <aside class="border-l-fine flex flex-col bg-black">
+            <div class="telemetry-block">
+                <span class="label-tiny">Processing Pipeline</span>
+                <div class="mt-6 space-y-6">
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-1.5 h-1.5 bg-green-500 shadow-[0_0_8px_#22c55e]"></div>
+                            <div class="w-[1px] h-8 bg-zinc-900 mt-1"></div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="label-tiny !mb-0 !text-zinc-600">Step_01</span>
+                                <span class="value-mono">0.2ms</span>
+                            </div>
+                            <div class="text-[10px] font-bold uppercase">Binary_Ingest</div>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-1.5 h-1.5 bg-blue-500 animate-pulse shadow-[0_0_8px_#3b82f6]"></div>
+                            <div class="w-[1px] h-8 bg-zinc-900 mt-1"></div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="label-tiny !mb-0 !text-zinc-600">Step_02</span>
+                                <span class="value-mono">ACTIVE</span>
+                            </div>
+                            <div class="text-[10px] font-bold uppercase">Reasoning_Layer</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="telemetry-block flex-1">
+                <span class="label-tiny">Intelligence Output</span>
+                <div class="mt-4 p-4 bg-zinc-900/20 border border-zinc-900 rounded-sm">
+                    <p class="text-[11px] leading-relaxed text-zinc-400 italic">
+                        "Document exhibits 92% semantic overlap with Project_Zion core requirements. Recommend automatic classification under 'Strategic_Assets'."
+                    </p>
+                </div>
+            </div>
+
+            <div class="telemetry-block">
+                <span class="label-tiny">Audio Spectrogram Core</span>
+                <div class="mt-4 h-12 flex flex-col justify-center gap-3">
+                    <div class="spec-line"></div>
+                    <div class="spec-line opacity-50"></div>
+                    <div class="flex justify-between text-[9px] mono text-zinc-600">
+                        <span>44.1KHZ</span>
+                        <span>BIT_DEPTH: 24</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 bg-surface border-t-fine">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="label-tiny">VRAM Load</span>
+                    <span class="value-mono">4.2GB</span>
+                </div>
+                <div class="h-1 bg-zinc-900 w-full overflow-hidden">
+                    <div class="bg-blue-600 h-full w-[18%]"></div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- COMMAND TERMINAL (Footer) -->
+        <footer class="col-span-4 border-t-fine bg-black flex items-center px-6 gap-4">
+            <span class="mono text-[11px] text-blue-600 font-bold">$</span>
+            <input type="text" placeholder="EXECUTE_SYSTEM_COMMAND..." 
+                   class="bg-transparent outline-none flex-1 text-[11px] mono text-zinc-500 placeholder-zinc-800">
+            <div class="flex gap-4">
+                <span class="text-[9px] mono text-zinc-700 uppercase">Input_Ready</span>
+                <span class="text-[9px] mono text-zinc-700 uppercase">GPU_ID: 0</span>
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+</html>

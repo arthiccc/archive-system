@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Archive Engine | Industrial Swiss</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Geist+Mono&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #fff; color: #000; overflow: hidden; }
+        .mono { font-family: 'Geist Mono', monospace; }
+        .grid-container { display: grid; grid-template-columns: 240px 1fr 300px; height: 100vh; }
+        .cell { border: 1px solid #000; padding: 24px; }
+        .h-xl { font-size: 80px; line-height: 0.9; letter-spacing: -0.05em; font-weight: 900; text-transform: uppercase; }
+        .data-bit { font-size: 10px; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid #000; padding-bottom: 4px; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <div class="grid-container">
+        <div class="cell flex flex-col justify-between">
+            <div>
+                <div class="h-8 w-8 bg-black mb-12"></div>
+                <div class="data-bit">Registry</div>
+                <div class="flex flex-col gap-4 font-bold text-sm uppercase">
+                    <div class="underline decoration-4 underline-offset-4">01_Q4_Strategy</div>
+                    <div class="text-zinc-300">02_Audit_Log</div>
+                    <div class="text-zinc-300">03_Transcripts</div>
+                </div>
+            </div>
+            <div class="mono text-[10px] font-bold">ARCHIVE_ENGINE_V4.SWISS</div>
+        </div>
+        <div class="cell overflow-auto">
+            <div class="data-bit w-fit">Active_Inspection_Core</div>
+            <h1 class="h-xl mt-12 mb-24">The Systematic Archive</h1>
+            <div class="max-w-xl text-2xl font-bold leading-tight">
+                Institutional precision achieved through structural rigor and the total elimination of the non-essential.
+            </div>
+            <div class="mt-24 grid grid-cols-2 gap-12">
+                <div>
+                    <div class="data-bit">Vision_Engine</div>
+                    <p class="text-sm">OCR scan complete. 1,402 entities identified. Coordinate mapping 100% verified.</p>
+                </div>
+                <div>
+                    <div class="data-bit">Audio_Engine</div>
+                    <p class="text-sm">Spectrogram analysis confirms 2 speakers. Diarization delta: 0.02ms.</p>
+                </div>
+            </div>
+        </div>
+        <div class="cell bg-black text-white flex flex-col gap-12">
+            <div>
+                <div class="data-bit border-white">Telemetry</div>
+                <div class="mono text-[11px] space-y-2">
+                    <div class="flex justify-between"><span>LATENCY</span><span>0.02MS</span></div>
+                    <div class="flex justify-between"><span>CPU_LOAD</span><span>14.2%</span></div>
+                    <div class="flex justify-between"><span>VRAM</span><span>4.2GB</span></div>
+                </div>
+            </div>
+            <div class="flex-1 border border-white/20 p-4">
+                <div class="data-bit border-white">Agent_Trace</div>
+                <div class="mono text-[9px] text-zinc-500 space-y-4">
+                    <div>[01] INGESTING BINARY...</div>
+                    <div>[02] MAPPING PIXELS...</div>
+                    <div class="text-white underline">[03] RECURSIVE_THINKING</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

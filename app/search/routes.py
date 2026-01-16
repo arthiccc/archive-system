@@ -1,8 +1,8 @@
 from flask import render_template, request
 from flask_login import login_required
-from sqlalchemy import or_, func
-from app.extensions import db
+from sqlalchemy import or_
 from app.models import Document, Category, AcademicPeriod, Tag
+from app.search.services import search_documents
 from . import search
 
 
@@ -16,56 +16,54 @@ def index():
     date_from = request.args.get("date_from")
     date_to = request.args.get("date_to")
 
-    results = None
+    results = []
     total_count = 0
     search_performed = False
+    highlights = {}
 
     if query or category_id or period_id or tag_id or date_from or date_to:
         search_performed = True
 
-        base_query = Document.query.filter_by(is_deleted=False)
-
-        if query:
-            search_term = f"%{query}%"
-            base_query = base_query.filter(
-                or_(
-                    Document.title.ilike(search_term),
-                    Document.original_filename.ilike(search_term),
-                    Document.description.ilike(search_term),
-                    Document.content_text.ilike(search_term),
-                )
-            )
-
+        # Build Meilisearch filters
+        ms_filters = []
         if category_id:
-            base_query = base_query.filter_by(category_id=category_id)
-
+            cat = Category.query.get(category_id)
+            if cat:
+                ms_filters.append(f"category = '{cat.name}'")
         if period_id:
-            base_query = base_query.filter_by(academic_period_id=period_id)
-
+            per = AcademicPeriod.query.get(period_id)
+            if per:
+                ms_filters.append(f"period = '{per.name}'")
         if tag_id:
-            base_query = base_query.filter(Document.tags.any(id=tag_id))
+            tag = Tag.query.get(tag_id)
+            if tag:
+                ms_filters.append(f"tags = '{tag.name}'")
 
-        if date_from:
-            from datetime import datetime
+        # Note: date filtering in Meilisearch would require timestamps
+        # For now, let's focus on the main query
 
-            try:
-                date_from_dt = datetime.strptime(date_from, "%Y-%m-%d")
-                base_query = base_query.filter(Document.uploaded_at >= date_from_dt)
-            except:
-                pass
+        filter_str = " AND ".join(ms_filters) if ms_filters else None
 
-        if date_to:
-            from datetime import datetime
+        ms_results = search_documents(query, filters=filter_str)
 
-            try:
-                date_to_dt = datetime.strptime(date_to, "%Y-%m-%d")
-                base_to = date_to_dt.replace(hour=23, minute=59, second=59)
-                base_query = base_query.filter(Document.uploaded_at <= date_to_dt)
-            except:
-                pass
+        if ms_results:
+            total_count = ms_results.total_hits
+            doc_ids = [hit["id"] for hit in ms_results.hits]
 
-        results = base_query.order_by(Document.uploaded_at.desc()).all()
-        total_count = len(results)
+            # Fetch documents from DB to ensure they exist and get all data
+            # Keep Meilisearch order
+            if doc_ids:
+                db_docs = Document.query.filter(
+                    Document.id.in_(doc_ids), Document.is_deleted == False
+                ).all()
+                doc_map = {doc.id: doc for doc in db_docs}
+
+                for hit in ms_results.hits:
+                    doc_id = int(hit["id"])
+                    if doc_id in doc_map:
+                        results.append(doc_map[doc_id])
+                        # Store highlights from _formatted
+                        highlights[doc_id] = hit.get("_formatted", {})
 
     categories = (
         Category.query.filter_by(is_active=True)
@@ -88,4 +86,5 @@ def index():
         categories=categories,
         periods=periods,
         tags=tags,
+        highlights=highlights,
     )

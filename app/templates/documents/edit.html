@@ -21,6 +21,10 @@
                 </div>
             </div>
             <div class="mb-3">
+                {{ form.correspondent.label(class="form-label") }}
+                {{ form.correspondent(class="form-select") }}
+            </div>
+            <div class="mb-3">
                 {{ form.description.label(class="form-label") }}
                 {{ form.description(class="form-control", rows=3) }}
             </div>

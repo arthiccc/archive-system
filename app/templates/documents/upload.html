@@ -22,6 +22,10 @@
                 </div>
             </div>
             <div class="mb-3">
+                {{ form.correspondent.label(class="form-label") }}
+                {{ form.correspondent(class="form-select") }}
+            </div>
+            <div class="mb-3">
                 {{ form.tags.label(class="form-label") }}
                 {{ form.tags(class="form-control", placeholder="e.g., Urgent, Confidential, FY2024") }}
                 <small class="text-muted">Separate tags with commas (optional)</small>

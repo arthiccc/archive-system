@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archive Engine | The Blueprint</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --surface: #0a0a0a;
+            --border: #1a1a1a;
+            --accent: #ffffff;
+            --text-muted: #666666;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--accent);
+            letter-spacing: -0.01em;
+        }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .panel-border { border: 1px solid var(--border); }
+        .panel-bg { background-color: var(--surface); }
+        
+        .nav-item.active {
+            background-color: #1a1a1a;
+            color: white;
+        }
+        
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        ::-webkit-scrollbar { width: 1px; }
+        ::-webkit-scrollbar-thumb { background: #333; }
+
+        input::placeholder { color: #333; }
+        
+        /* Precision UI Grids */
+        .telemetry-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 60px;
+            font-size: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden">
+
+    <!-- 1. ENGINE RAIL (Icon Navigation) -->
+    <aside class="w-16 flex flex-col items-center py-6 border-r border-[#1a1a1a] gap-8">
+        <div class="w-8 h-8 bg-white rounded flex items-center justify-center text-black font-bold text-xs">A</div>
+        <nav class="flex flex-col gap-6 text-zinc-600">
+            <i class="bi bi-grid-1x2 text-lg cursor-pointer hover:text-white transition active text-white"></i>
+            <i class="bi bi-mic text-lg cursor-pointer hover:text-white transition"></i>
+            <i class="bi bi-cpu text-lg cursor-pointer hover:text-white transition"></i>
+            <i class="bi bi-gear text-lg cursor-pointer hover:text-white transition"></i>
+        </nav>
+        <div class="mt-auto flex flex-col gap-6 text-zinc-600">
+            <i class="bi bi-question-circle text-lg cursor-pointer hover:text-white transition"></i>
+        </div>
+    </aside>
+
+    <!-- 2. RESOURCE SIDEBAR (File List) -->
+    <aside class="w-72 flex flex-col border-r border-[#1a1a1a] panel-bg">
+        <div class="p-4 border-b border-[#1a1a1a] flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Resources</span>
+                <i class="bi bi-plus-lg text-xs cursor-pointer text-zinc-500 hover:text-white"></i>
+            </div>
+            <div class="relative">
+                <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-zinc-600"></i>
+                <input type="text" placeholder="FILTER_RESOURCES" 
+                       class="w-full bg-black border border-[#1a1a1a] rounded py-1.5 pl-8 pr-3 text-[10px] mono outline-none focus:border-zinc-500">
+            </div>
+        </div>
+        <div class="flex-1 overflow-auto">
+            <!-- Resource Item 1 -->
+            <div class="p-4 border-b border-[#1a1a1a] bg-[#0d0d0d] cursor-pointer">
+                <div class="flex items-center justify-between mb-1">
+                    <span class="text-[10px] mono text-blue-500">PDF_8472</span>
+                    <span class="text-[9px] mono text-zinc-600">1.2MB</span>
+                </div>
+                <h4 class="text-xs font-medium truncate">Q4_Financial_Report_v2.pdf</h4>
+                <div class="mt-3 flex items-center gap-4">
+                    <div class="flex items-center gap-1.5">
+                        <div class="status-dot bg-green-500"></div>
+                        <span class="text-[9px] mono text-zinc-500 uppercase">Indexed</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Resource Item 2 -->
+            <div class="p-4 border-b border-[#1a1a1a] hover:bg-[#080808] transition cursor-pointer">
+                <div class="flex items-center justify-between mb-1">
+                    <span class="text-[10px] mono text-purple-500">WAV_0192</span>
+                    <span class="text-[9px] mono text-zinc-600">14.8MB</span>
+                </div>
+                <h4 class="text-xs font-medium truncate text-zinc-400">Board_Meeting_Audio.wav</h4>
+                <div class="mt-3 flex items-center gap-4">
+                    <div class="flex items-center gap-1.5">
+                        <div class="status-dot bg-blue-500 animate-pulse"></div>
+                        <span class="text-[9px] mono text-zinc-500 uppercase">Parsing</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 3. MAIN VIEWPORT (The Document) -->
+    <main class="flex-1 flex flex-col">
+        <!-- Main Header -->
+        <header class="h-16 border-b border-[#1a1a1a] flex items-center justify-between px-8">
+            <div class="flex items-center gap-4">
+                <span class="text-xs font-medium">Q4_Financial_Report_v2.pdf</span>
+                <span class="px-2 py-0.5 border border-[#1a1a1a] rounded text-[9px] mono text-zinc-500">UUID: 8472-X91</span>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-2">
+                    <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                    <span class="text-[10px] mono text-zinc-400">SYNC_ENABLED</span>
+                </div>
+                <button class="bg-white text-black px-4 py-1.5 rounded text-[10px] font-bold uppercase tracking-tight hover:bg-zinc-200">Export</button>
+            </div>
+        </header>
+
+        <!-- Document Content -->
+        <div class="flex-1 overflow-auto bg-[#050505] p-12">
+            <div class="max-w-3xl mx-auto bg-black border border-[#1a1a1a] shadow-2xl p-16">
+                <div class="mb-12 border-b border-[#1a1a1a] pb-8">
+                    <h1 class="text-2xl font-bold mb-2">Quarterly Financial Review</h1>
+                    <p class="text-zinc-500 text-sm">Fiscal Period: Q4 2025 • Report ID: 19283-F</p>
+                </div>
+                <div class="space-y-6 text-zinc-400 text-sm leading-relaxed">
+                    <p>The following document outlines the systematic growth of the <span class="text-white">Archive Engine</span> infrastructure. Our transition into multi-modal intelligence has yielded a 40% increase in retrieval efficiency.</p>
+                    <div class="p-6 border border-[#1a1a1a] rounded my-8">
+                        <div class="flex justify-between items-end mb-4">
+                            <span class="text-[10px] mono text-zinc-500">REVENUE_PROJECTION</span>
+                            <span class="text-xl font-bold text-white">$12.4M</span>
+                        </div>
+                        <div class="w-full bg-[#1a1a1a] h-1.5 rounded-full overflow-hidden">
+                            <div class="bg-blue-600 h-full w-[85%]"></div>
+                        </div>
+                    </div>
+                    <p>Core development focus for the upcoming cycle remains the integration of the <span class="text-blue-500">Agentic Orchestration</span> layer, allowing for recursive task planning and trace logging as demonstrated in the telemetry panel.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 4. TELEMETRY PANEL (The AI Data) -->
+    <aside class="w-80 border-l border-[#1a1a1a] flex flex-col panel-bg">
+        <div class="h-16 border-b border-[#1a1a1a] flex items-center px-6">
+            <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Engine Telemetry</span>
+        </div>
+        
+        <div class="p-6 flex-1 flex flex-col">
+            <div class="mb-8 p-4 border border-[#1a1a1a] rounded">
+                <div class="text-[10px] mono text-zinc-500 mb-2 uppercase">Core Load</div>
+                <div class="flex items-center gap-4">
+                    <span class="text-2xl font-bold italic">84.2<span class="text-xs text-zinc-600 ml-1">%</span></span>
+                    <div class="flex-1 h-1 bg-[#1a1a1a] rounded-full overflow-hidden">
+                        <div class="bg-white h-full w-[84%]"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col flex-1">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-[10px] font-bold text-zinc-500">PROCESS_LOG</span>
+                    <span class="text-[9px] mono text-blue-500 underline cursor-pointer">CLEAR</span>
+                </div>
+                
+                <div class="mono text-zinc-400">
+                    <div class="telemetry-row">
+                        <span class="text-zinc-600">11:24:01</span>
+                        <span>INGEST_SUCCESS</span>
+                        <span class="text-right text-zinc-600">0.2ms</span>
+                    </div>
+                    <div class="telemetry-row">
+                        <span class="text-zinc-600">11:24:02</span>
+                        <span>VISION_SCAN</span>
+                        <span class="text-right text-zinc-600">1.4s</span>
+                    </div>
+                    <div class="telemetry-row">
+                        <span class="text-zinc-600">11:24:03</span>
+                        <span class="text-blue-500 font-bold">LLM_PLAN_GEN</span>
+                        <span class="text-right text-zinc-600">0.8s</span>
+                    </div>
+                    <div class="telemetry-row">
+                        <span class="text-zinc-600">11:24:05</span>
+                        <span class="text-green-500 italic">INDEX_MEILI</span>
+                        <span class="text-right text-zinc-600">42ms</span>
+                    </div>
+                </div>
+
+                <div class="mt-auto p-4 border border-[#1a1a1a] rounded bg-black">
+                    <div class="flex items-center gap-2 mb-3">
+                        <i class="bi bi-stars text-zinc-400"></i>
+                        <span class="text-[10px] font-bold uppercase tracking-widest">Model Analysis</span>
+                    </div>
+                    <p class="text-[11px] leading-relaxed text-zinc-400">
+                        The document identifies as a <span class="text-white">Strategic Report</span>. Proposed tags: [FINANCE, GROWTH, Q4]. Confidence: 0.94
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="h-12 border-t border-[#1a1a1a] px-6 flex items-center justify-between">
+            <span class="text-[9px] mono text-zinc-600">INSTANCE: US_EAST_1</span>
+            <div class="flex gap-2">
+                <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+            </div>
+        </div>
+    </aside>
+
+</body>
+</html>

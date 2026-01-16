@@ -80,6 +80,11 @@
             <div class="document-card-meta">
                 <i class="bi bi-calendar3"></i> {{ doc.academic_period.name if doc.academic_period else '-' }}
             </div>
+            {% if doc.correspondent %}
+            <div class="document-card-meta">
+                <i class="bi bi-person"></i> {{ doc.correspondent.name }}
+            </div>
+            {% endif %}
             {% if doc.tags %}
             <div class="document-card-tags">
                 {% for tag in doc.tags %}

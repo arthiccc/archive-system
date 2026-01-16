@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Archive Engine | Institutional Apex</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,500;1,6..72,300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --surface: #080808;
+            --border: #1a1a1a;
+            --text: #d1d1d1;
+            --dim: #444444;
+            --accent: #ffffff;
+            --blue: #0066ff;
+        }
+        body {
+            font-family: 'Geist', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            letter-spacing: -0.01em;
+            overflow: hidden;
+        }
+        .mono { font-family: 'Geist Mono', monospace; }
+        .serif { font-family: 'Newsreader', serif; }
+        
+        .b-1 { border: 1px solid var(--border); }
+        .br-1 { border-right: 1px solid var(--border); }
+        .bl-1 { border-left: 1px solid var(--border); }
+        .bb-1 { border-bottom: 1px solid var(--border); }
+        .bt-1 { border-top: 1px solid var(--border); }
+
+        /* The Sheet: Deep Work Focus */
+        .document-canvas {
+            background-color: #030303;
+            background-image: radial-gradient(circle, #111 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+        .active-sheet {
+            background: white;
+            color: black;
+            width: 100%;
+            max-width: 850px;
+            min-height: 1131px; /* A4 Ratio */
+            padding: 100px;
+            box-shadow: 0 60px 150px rgba(0,0,0,0.9);
+            position: relative;
+        }
+
+        /* Registry Rows */
+        .registry-row {
+            display: grid;
+            grid-template-columns: 60px 1fr 80px;
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .registry-row:hover { background: #0c0c0c; }
+        .registry-row.active { background: #0f0f0f; border-left: 2px solid var(--blue); }
+
+        .label-tiny {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--dim);
+        }
+
+        ::-webkit-scrollbar { width: 0px; }
+    </style>
+</head>
+<body class="h-screen flex flex-col">
+
+    <!-- 1. ENGINE HEADER -->
+    <header class="h-14 bg-black bb-1 flex items-center justify-between px-6 z-50">
+        <div class="flex items-center gap-12">
+            <div class="flex items-center gap-3">
+                <div class="w-4 h-4 bg-white rounded-sm"></div>
+                <span class="mono text-xs font-bold tracking-tighter uppercase">ARCHIVE_KERNEL_V4</span>
+            </div>
+            <nav class="flex gap-8">
+                <span class="text-[11px] font-bold uppercase tracking-widest text-white border-b-2 border-white pb-4 mt-4">Workbench</span>
+                <span class="text-[11px] font-bold uppercase tracking-widest text-zinc-600 hover:text-white transition cursor-pointer">Intelligence</span>
+                <span class="text-[11px] font-bold uppercase tracking-widest text-zinc-600 hover:text-white transition cursor-pointer">Registry</span>
+            </nav>
+        </div>
+        <div class="flex items-center gap-10">
+            <div class="flex flex-col items-end">
+                <span class="label-tiny">System_Load</span>
+                <span class="mono text-xs text-zinc-400">4.2% // 12ms</span>
+            </div>
+            <div class="w-[1px] h-6 bg-zinc-800"></div>
+            <div class="flex items-center gap-3">
+                <i class="bi bi-cpu text-zinc-600"></i>
+                <span class="mono text-xs text-green-500 uppercase font-bold">Nominal</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+        
+        <!-- 2. MODE RAIL -->
+        <nav class="w-16 flex flex-col items-center py-8 gap-10 bg-black br-1">
+            <i class="bi bi-grid-1x2 text-white text-xl"></i>
+            <i class="bi bi-search text-zinc-700 text-xl hover:text-white transition cursor-pointer"></i>
+            <i class="bi bi-mic text-zinc-700 text-xl hover:text-white transition cursor-pointer"></i>
+            <div class="mt-auto flex flex-col gap-8">
+                <i class="bi bi-terminal text-zinc-700 text-lg"></i>
+                <div class="w-6 h-6 rounded-full border border-zinc-800 flex items-center justify-center text-[10px] mono">JS</div>
+            </div>
+        </nav>
+
+        <!-- 3. OBJECT REGISTRY -->
+        <aside class="w-80 flex flex-col br-1 bg-black">
+            <div class="h-10 flex items-center px-5 bg-zinc-900/20 bb-1">
+                <span class="label-tiny">Registry_Stack</span>
+            </div>
+            <div class="p-4 bb-1">
+                <input type="text" placeholder="QUERY_OBJECTS..." 
+                       class="w-full bg-zinc-900/50 b-1 rounded-sm py-1.5 px-3 text-[10px] mono outline-none focus:border-zinc-600">
+            </div>
+            <div class="flex-1 overflow-auto">
+                <div class="registry-row active">
+                    <span class="mono text-[10px] text-blue-500">#84729</span>
+                    <div class="text-[11px] font-medium truncate">Institutional_Strategy_v4.pdf</div>
+                    <span class="mono text-[9px] text-zinc-600 text-right">842KB</span>
+                </div>
+                <div class="registry-row">
+                    <span class="mono text-[10px] text-zinc-600">#01922</span>
+                    <div class="text-[11px] font-medium truncate text-zinc-500">Board_Meeting_Audio.wav</div>
+                    <span class="mono text-[9px] text-zinc-600 text-right">42MB</span>
+                </div>
+                <div class="registry-row">
+                    <span class="mono text-[10px] text-zinc-600">#92831</span>
+                    <div class="text-[11px] font-medium truncate text-zinc-500">Audit_Log_Export.json</div>
+                    <span class="mono text-[9px] text-zinc-600 text-right">1.4MB</span>
+                </div>
+            </div>
+            <div class="p-6 bg-zinc-900/10 bt-1">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="label-tiny">Storage_Usage</span>
+                    <span class="mono text-[10px] text-zinc-500">82%</span>
+                </div>
+                <div class="h-[1px] bg-zinc-800 w-full overflow-hidden">
+                    <div class="bg-white h-full w-[82%]"></div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 4. WORKSPACE: THE INSPECTOR -->
+        <main class="flex-1 flex flex-col document-canvas overflow-hidden">
+            <div class="h-10 flex items-center justify-between px-6 bg-zinc-900/20 bb-1">
+                <div class="flex items-center gap-4">
+                    <span class="label-tiny">Inspector</span>
+                    <span class="mono text-[10px] text-zinc-500">/root/vault/STRAT_v4.pdf</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="label-tiny">Checksum</span>
+                    <span class="mono text-[10px] text-zinc-500">0xFA29B12C</span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-auto p-12 scroll-smooth">
+                <div class="active-sheet mx-auto">
+                    <div class="flex justify-between items-start mb-24">
+                        <div class="mono text-[9px] text-zinc-400 uppercase tracking-widest border border-zinc-100 px-2 py-1">
+                            Ref: 84729-INST-STRAT
+                        </div>
+                        <div class="text-right">
+                            <span class="label-tiny !text-zinc-400">Class</span>
+                            <div class="text-xs font-bold uppercase italic">Confidential_Grade_A</div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-16">
+                        <header>
+                            <div class="serif italic text-zinc-400 text-xl mb-4">Strategic Framework</div>
+                            <h1 class="serif text-5xl font-light tracking-tight leading-none text-black">The Institutional Engine</h1>
+                        </header>
+
+                        <div class="h-[1px] bg-zinc-100 w-full"></div>
+
+                        <div class="serif text-xl leading-relaxed space-y-8 text-zinc-800 opacity-90">
+                            <p>This systematic overview defines the architecture of the <span class="font-bold text-black">Archive Engine v4.0</span>. Our goal is to eliminate the friction of data retrieval for campus staff through recursive multi-modal analysis.</p>
+                            <p>By leveraging <span class="mono text-sm bg-zinc-100 px-1">CUDA_ACCELERATED</span> kernels, the engine processes document strings and audio spectrograms in near-zero latency, ensuring that institutional memory is always accessible and actionable.</p>
+                            
+                            <div class="grid grid-cols-2 gap-16 py-12 border-y border-zinc-50 my-12">
+                                <div class="space-y-4">
+                                    <span class="label-tiny !text-zinc-400">Processing_Core</span>
+                                    <p class="text-sm font-medium leading-relaxed">Agentic plans are generated for every object ingested, allowing for semantic cross-referencing across the entire registry.</p>
+                                </div>
+                                <div class="space-y-4">
+                                    <span class="label-tiny !text-zinc-400">Entity_Map</span>
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between text-[11px]">
+                                            <span class="text-zinc-400">Revenue_2025</span>
+                                            <span class="font-bold text-green-600">+14.2%</span>
+                                        </div>
+                                        <div class="flex justify-between text-[11px]">
+                                            <span class="text-zinc-400">Risk_Vector</span>
+                                            <span class="font-bold text-blue-600">Nominal</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p>Long-stay visiting is achieved through focus. The contrast between the obsidian environment and the bright document sheet creates a natural reading sanctuary.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 5. AGENTIC TELEMETRY -->
+        <aside class="w-96 bl-1 flex flex-col bg-black">
+            <div class="h-10 flex items-center px-5 bg-zinc-900/20 bb-1">
+                <span class="label-tiny">Agentic_Trace</span>
+            </div>
+            
+            <div class="p-6 border-b-fine bg-zinc-900/10">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-1.5 h-1.5 bg-blue-500 animate-pulse shadow-[0_0_8px_#0066ff]"></div>
+                    <span class="mono text-[10px] text-blue-500">BRAIN_UNIT_ACTIVE</span>
+                </div>
+                <div class="p-4 bg-black border border-zinc-900 rounded-sm">
+                    <span class="label-tiny !text-blue-500">Plan_Reasoning</span>
+                    <p class="text-[11px] leading-relaxed text-zinc-400 italic mt-2">
+                        "Cross-referencing entity 'Global_Revenue' against 'Audit_Log_2024' to detect potential fiscal anomalies in the Q4 strategy."
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex-1 p-6 overflow-auto">
+                <span class="label-tiny block mb-6">Execution_Log</span>
+                <div class="space-y-6 mono text-[10px]">
+                    <div class="flex gap-4">
+                        <span class="text-zinc-700">01</span>
+                        <div class="flex-1">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-zinc-400 font-bold uppercase">Binary_Ingest</span>
+                                <span class="text-green-500">OK</span>
+                            </div>
+                            <div class="w-full h-[1px] bg-zinc-900 overflow-hidden"><div class="bg-white h-full w-full"></div></div>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <span class="text-zinc-700">02</span>
+                        <div class="flex-1">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-zinc-400 font-bold uppercase">Vision_OCR</span>
+                                <span class="text-green-500">OK</span>
+                            </div>
+                            <div class="w-full h-[1px] bg-zinc-900 overflow-hidden"><div class="bg-white h-full w-full"></div></div>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <span class="text-zinc-700">03</span>
+                        <div class="flex-1">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-blue-500 font-bold uppercase">Semantic_Sync</span>
+                                <span class="text-blue-500">42%</span>
+                            </div>
+                            <div class="w-full h-[1px] bg-zinc-900 overflow-hidden"><div class="bg-blue-600 h-full w-[42%]"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 bt-1 bg-zinc-900/10">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="label-tiny">VRAM_Utilization</span>
+                    <span class="value-s text-xs">4.2GB / 24GB</span>
+                </div>
+                <div class="h-[1px] bg-zinc-800 w-full overflow-hidden">
+                    <div class="bg-blue-600 h-full w-[18%]"></div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- 6. COMMAND TERMINAL -->
+    <footer class="h-10 bg-black bt-1 flex items-center px-6 gap-4">
+        <span class="mono text-[11px] text-blue-600 font-bold">></span>
+        <input type="text" placeholder="EXECUTE_SYSTEM_COMMAND..." 
+               class="bg-transparent outline-none flex-1 text-[11px] mono text-zinc-500 placeholder-zinc-900">
+        <div class="flex gap-6">
+            <span class="label-tiny">Instance: Node_01</span>
+            <span class="label-tiny">Lat: 0.02ms</span>
+        </div>
+    </footer>
+
+</body>
+</html>

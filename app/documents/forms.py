@@ -10,6 +10,7 @@ class DocumentUploadForm(FlaskForm):
     academic_period = SelectField(
         "Academic Period", coerce=int, validators=[DataRequired()]
     )
+    correspondent = SelectField("Correspondent", coerce=int, validators=[Optional()])
     tags = StringField(
         "Tags (comma separated)", validators=[Optional(), Length(max=200)]
     )
@@ -22,6 +23,7 @@ class DocumentEditForm(FlaskForm):
     academic_period = SelectField(
         "Academic Period", coerce=int, validators=[DataRequired()]
     )
+    correspondent = SelectField("Correspondent", coerce=int, validators=[Optional()])
     description = TextAreaField(
         "Description", validators=[Optional(), Length(max=2000)]
     )
